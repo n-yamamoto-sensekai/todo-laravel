@@ -19,29 +19,39 @@
 		</p>
 		@endif
 
+        {{-- タスク一覧  --}}
 		<ul class="space-y-2">
 		@forelse ($tasks as $task)
 			<li class="border rounded p-4 flex justify-between items-center">
-			<span>{{ $task->title }}</span>
+                <span>{{ $task->title }}</span>
 
-			{{-- HTMLフォームは基本的に GET, POSTしか送れない --}}
-			<form 
-				action="{{ url('/tasks/' . $task->id) }}"
-				method="POST"
-				style="display: inline;"
-				onsubmit="return confirm('本当に削除しますか？');"
-			>
-				{{-- Laravelに DELETEリクエストとして送るためのBlade記述 --}}
-				@csrf
-				@method('DELETE')
+                <div class="flex gap-2">
+                    <a 
+                        href="{{ url('/tasks/' . $task->id . '/edit') }}"
+                        class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
+                    >
+                        編集
+                    </a>
 
-				<button
-				type="submit"
-				class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-				>
-				削除
-				</button>
-			</form>
+                    {{-- HTMLフォームは基本的に GET, POSTしか送れない --}}
+                    <form 
+                        action="{{ url('/tasks/' . $task->id) }}"
+                        method="POST"
+                        style="display: inline;"
+                        onsubmit="return confirm('本当に削除しますか？');"
+                    >
+                        {{-- Laravelに DELETEリクエストとして送るためのBlade記述 --}}
+                        @csrf
+                        @method('DELETE')
+
+                        <button
+                        type="submit"
+                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                        >
+                            削除
+                        </button>
+                    </form>
+                </div>
 			</li>
 		@empty
 			<li class="rounded border border-dashed p-4 text-gray-500">
@@ -50,9 +60,9 @@
 		@endforelse
 		</ul>
 
+        {{-- 新規タスクフォーム --}}
 		<form action="{{ url('/tasks') }}" method="POST" class="mt-6">
 		@csrf
-
 		<div class=" flex gap-2">
 			<input
 			type="text"

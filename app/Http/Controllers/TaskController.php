@@ -31,6 +31,26 @@ class TaskController extends Controller
         return redirect('/tasks')->with('message', 'タスクを追加しました');  // フラッシュメッセージ
     }
 
+    // 編集画面表示
+    public function edit(Task $task)
+    {
+        return view('tasks.edit', compact('task'));
+    }
+
+    // 更新
+    public function update(Request $request, Task $task)
+    {
+        $request->validate([
+            'title'=> 'required|max:255',
+        ]);
+
+        $task->update([
+            'title'=> $request->input('title'),
+        ]);
+
+        return redirect('/tasks')->with('message','タスクを更新しました。');
+    }
+
     // 削除
     public function destroy(Task $task)  // Route Model Binding
     {
