@@ -28,7 +28,7 @@ class TaskController extends Controller
             'title' => $request->input('title'),
         ]);
 
-        return redirect('/tasks')->with('message', 'タスクを追加しました');  // フラッシュメッセージ
+        return redirect()->route('tasks.index')->with('message', 'タスクを追加しました');  // フラッシュメッセージ
     }
 
     // 編集画面表示
@@ -48,13 +48,13 @@ class TaskController extends Controller
             'title'=> $request->input('title'),
         ]);
 
-        return redirect('/tasks')->with('message','タスクを更新しました。');
+        return redirect()->route('tasks.index')->with('message','タスクを更新しました。');
     }
 
     // 削除
     public function destroy(Task $task)  // Route Model Binding
     {
         $task->delete();
-        return redirect('/tasks')->with('message', 'タスクを削除しました');
+        return redirect()->route('tasks.index')->with('message', 'タスクを削除しました');
     }
 }
