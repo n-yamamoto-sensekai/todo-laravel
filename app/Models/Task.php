@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    protected $fillable = ['title']; // Strong Parameterのような感じ（受け付けるリクエストの要素）
+    protected $fillable = ['title', 'is_done']; // Strong Parameterのような感じ（受け付けるリクエストの要素）
 }

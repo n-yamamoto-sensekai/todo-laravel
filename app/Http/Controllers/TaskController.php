@@ -51,6 +51,16 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('message','タスクを更新しました。');
     }
 
+    // 完了フラグの切り替え
+    public function toggle(Task $task)
+    {
+        $task->update([
+            'is_done' => ! $task->is_done,  // !：真偽値を逆にする演算子
+        ]);
+
+        return redirect()->route('tasks.index')->with('message','タスクの状態を更新しました');
+    }
+
     // 削除
     public function destroy(Task $task)  // Route Model Binding
     {
