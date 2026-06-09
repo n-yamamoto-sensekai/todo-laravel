@@ -8,6 +8,28 @@
     {{-- フラッシュメッセージ --}}
     <x-flash-message />
 
+    {{-- フィルター --}}
+    <div class="mb-4 flex gap-2">
+        <a 
+            href="{{ route('tasks.index') }}"
+            class=" px-3 py-1 rounded {{ $filter == 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700' }} "
+        >
+            すべて
+        </a>
+        <a 
+            href="{{ route('tasks.index', ['filter' => 'active']) }}" {{-- URLクエリパラメータをつける --}}
+            class=" px-3 py-1 rounded {{ $filter == 'active' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700' }} "
+        >
+            未完了
+        </a>
+        <a 
+            href="{{ route('tasks.index', ['filter' => 'completed']) }}"
+            class=" px-3 py-1 rounded {{ $filter == 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700' }} "
+        >
+            完了済み
+        </a>
+    </div>
+
     {{-- タスク一覧  --}}
     <ul class="space-y-2">
     @forelse ($tasks as $task)
