@@ -6,11 +6,7 @@
     <h1 class="text-3xl font-bold text-blue-600 mb-6">タスクリスト</h1>
 
     {{-- フラッシュメッセージ --}}
-    @if (session('message'))
-    <p class="mb-4 rounded bg-green-100 px-4 py-2 text-green-700">
-        {{ session('message') }}
-    </p>
-    @endif
+    <x-flash-message />
 
     {{-- タスク一覧  --}}
     <ul class="space-y-2">
@@ -36,13 +32,9 @@
                     {{-- Laravelに DELETEリクエストとして送るためのBlade記述 --}}
                     @csrf
                     @method('DELETE')
-
-                    <button
-                    type="submit"
-                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                    >
+                    <x-danger-button>
                         削除
-                    </button>
+                    </x-danger-button>
                 </form>
             </div>
         </li>
@@ -56,23 +48,18 @@
     {{-- 新規タスクフォーム --}}
     <form action="{{ route('tasks.store') }}" method="POST" class="mt-6">
     @csrf
+
     <div class=" flex gap-2">
-        <input
-        type="text"
-        name="title"
-        value="{{ old('title') }}"
-        class="border rounded px-3 py-2 flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-        <button
-        type="submit"
-        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-        + 追加
-        </button>
+        {{-- `:value` と:をつけることでこの属性の中身はただの文字列ではなく、PHPとして実行するという意味になる` --}}
+        <x-text-input name="title" :value="old('title')" />
+
+        <x-primary-button>
+            + 追加
+        </x-primary-button>
+
     </div>
 
-    @error('title')
-        <p class="mt-2 text-sm text-red-600">エラー： {{ $message }}</p>
-    @enderror
+    <x-input-error name="title" />
+
     </form>
 @endsection

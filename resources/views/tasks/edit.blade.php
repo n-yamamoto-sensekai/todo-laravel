@@ -10,24 +10,17 @@
             @method('PUT') {{-- LaravelにPUTリクエストとして送信 --}}
 
             <div class="flex gap-2">
-                <input
-                    type="text"
-                    name="title"
-                    value="{{ old('title', $task->title) }}" {{-- old('title') があればそれを表示、なければ $task->title を表示 --}}
-                    class="border rounded px-3 py-2 flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
 
-                <button
-                    type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
+                <x-text-input name="title" :value="old('title', $task->title)" />
+
+                <x-primary-button>
                     更新
-                </button>
+                </x-primary-button>
+
             </div>
 
-            @error('title')
-                <p class="mt-2 text-sm text-red-600">エラー： {{ $message }}</p>
-            @enderror
+            <x-input-error name="title" />
+
         </form>
 
         <a href="{{ route('tasks.index') }}" class="text-blue-600 hover:underline">
