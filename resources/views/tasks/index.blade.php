@@ -12,9 +12,26 @@
     <ul class="space-y-2">
     @forelse ($tasks as $task)
         <li class="border rounded p-4 flex justify-between items-center">
-            <span>{{ $task->title }}</span>
+
+            <span class="{{ $task->is_done ? 'line-through text-gray-400' : '' }}">
+                {{ $task->title }}
+            </span>
 
             <div class="flex gap-2">
+
+                {{-- 完了フラグ --}}
+                <form action="{{ route('tasks.toggle', $task) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+
+                    <button
+                        type="submit"
+                        class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                    >
+                        {{ $task->is_done ? '未完了に戻す' : '完了' }}
+                    </button>
+                </form>
+
                 <a 
                     href="{{ route('tasks.edit', $task) }}"
                     class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
