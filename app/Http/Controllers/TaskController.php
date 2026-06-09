@@ -8,14 +8,28 @@ use App\Models\Task;
 class TaskController extends Controller
 {
     // 一覧表示
-    public function index()
+    public function index(Request $request)
     {
-        // 完了ステータス順 > 新規順 に並び替えて取得
-        $tasks = Task::orderBy('is_done')
+        // フィルター機能
+        $filter = $request->query("filter", "all");  // URLにfilterがない場合allを使う
+
+        $query = Task::query(); // Taskテーブルからデータを取得する準備をする
+
+        if ($filter === 'active') {
+            $query->where('is_done', false);  // 条件で絞り込む
+        }
+
+        if ($filter === 'completed') {
+            $query->where('is_done', true);
+        }
+
+        // 完了ステータス順 > 新規順 に並び替えて実際に取得
+        $tasks = $query
+            ->orderBy('is_done')
             ->latest()
             ->get();
 
-        return view("tasks.index", compact("tasks"));
+        return view("tasks.index", compact("tasks", "filter"));
     }
 
     // 追加

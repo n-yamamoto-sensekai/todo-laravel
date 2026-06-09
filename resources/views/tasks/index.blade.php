@@ -8,6 +8,19 @@
     {{-- フラッシュメッセージ --}}
     <x-flash-message />
 
+    {{-- フィルター --}}
+    <div class="mb-4 flex gap-2">
+        <x-filter-link href="{{ route('tasks.index') }}" :active="$filter === 'all'" >
+            すべて
+        </x-filter-link>
+        <x-filter-link href="{{ route('tasks.index', ['filter' => 'active']) }}" :active="$filter === 'active'" >
+            未完了
+        </x-filter-link>
+        <x-filter-link href="{{ route('tasks.index', ['filter' => 'completed']) }}" :active="$filter === 'completed'" >
+            完了済み
+        </x-filter-link>
+    </div>
+
     {{-- タスク一覧  --}}
     <ul class="space-y-2">
     @forelse ($tasks as $task)
