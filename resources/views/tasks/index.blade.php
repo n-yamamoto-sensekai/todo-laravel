@@ -10,24 +10,15 @@
 
     {{-- フィルター --}}
     <div class="mb-4 flex gap-2">
-        <a 
-            href="{{ route('tasks.index') }}"
-            class=" px-3 py-1 rounded {{ $filter == 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700' }} "
-        >
+        <x-filter-link href="{{ route('tasks.index') }}" :active="$filter === 'all'" >
             すべて
-        </a>
-        <a 
-            href="{{ route('tasks.index', ['filter' => 'active']) }}" {{-- URLクエリパラメータをつける --}}
-            class=" px-3 py-1 rounded {{ $filter == 'active' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700' }} "
-        >
+        </x-filter-link>
+        <x-filter-link href="{{ route('tasks.index', ['filter' => 'active']) }}" :active="$filter === 'active'" >
             未完了
-        </a>
-        <a 
-            href="{{ route('tasks.index', ['filter' => 'completed']) }}"
-            class=" px-3 py-1 rounded {{ $filter == 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700' }} "
-        >
+        </x-filter-link>
+        <x-filter-link href="{{ route('tasks.index', ['filter' => 'completed']) }}" :active="$filter === 'completed'" >
             完了済み
-        </a>
+        </x-filter-link>
     </div>
 
     {{-- タスク一覧  --}}
