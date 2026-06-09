@@ -10,8 +10,11 @@ class TaskController extends Controller
     // 一覧表示
     public function index()
     {
-        // 新しい順にタスク一覧を取得
-        $tasks = Task::latest()->get();
+        // 完了ステータス順 > 新規順 に並び替えて取得
+        $tasks = Task::orderBy('is_done')
+            ->latest()
+            ->get();
+
         return view("tasks.index", compact("tasks"));
     }
 
