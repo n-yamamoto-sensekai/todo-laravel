@@ -24,12 +24,9 @@
                     @csrf
                     @method('PATCH')
 
-                    <button
-                        type="submit"
-                        class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                    >
+                    <x-success-button>
                         {{ $task->is_done ? '未完了に戻す' : '完了' }}
-                    </button>
+                    </x-success-button>
                 </form>
 
                 <a 
