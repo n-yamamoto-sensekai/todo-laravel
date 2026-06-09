@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>タスク編集</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="p-8">
-    <div class="max-w-2xl mx-auto">
+@extends('layouts.app')
+
+@section('title', 'タスク編集')
+
+@section('content')
         <h1 class="text-3xl font-bold text-blue-600 mb-6">タスク編集</h1>
 
         <form action="{{ route('tasks.update', $task) }}" method="POST" class="mb-6">
@@ -39,5 +34,4 @@
             一覧に戻る
         </a>
     </div>
-</body>
-</html>
+@endsection
