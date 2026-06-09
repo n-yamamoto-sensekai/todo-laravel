@@ -13,9 +13,15 @@
     @forelse ($tasks as $task)
         <li class="border rounded p-4 flex justify-between items-center">
 
-            <span class="{{ $task->is_done ? 'line-through text-gray-400' : '' }}">
-                {{ $task->title }}
-            </span>
+            <div>
+                <span class="{{ $task->is_done ? 'line-through text-gray-400' : '' }}">
+                    {{ $task->title }}
+                </span>
+                <span class="ml-2 text-sm {{ $task->is_done ? 'text-green-600' : 'text-gray-500' }}">
+                    {{ $task->is_done ? '完了' : '未完了' }}
+                </span>    
+            </div>
+
 
             <div class="flex gap-2">
 
