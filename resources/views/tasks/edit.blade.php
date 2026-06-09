@@ -10,7 +10,7 @@
     <div class="max-w-2xl mx-auto">
         <h1 class="text-3xl font-bold text-blue-600 mb-6">タスク編集</h1>
 
-        <form action="{{ url('/tasks/' . $task->id) }}" method="POST" class="mb-6">
+        <form action="{{ route('tasks.update', $task) }}" method="POST" class="mb-6">
             @csrf
             @method('PUT') {{-- LaravelにPUTリクエストとして送信 --}}
 
@@ -35,7 +35,7 @@
             @enderror
         </form>
 
-        <a href="{{ url('/tasks') }}" class="text-blue-600 hover:underline">
+        <a href="{{ route('tasks.index') }}" class="text-blue-600 hover:underline">
             一覧に戻る
         </a>
     </div>

@@ -27,7 +27,7 @@
 
                 <div class="flex gap-2">
                     <a 
-                        href="{{ url('/tasks/' . $task->id . '/edit') }}"
+                        href="{{ route('tasks.edit', $task) }}"
                         class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
                     >
                         編集
@@ -35,7 +35,7 @@
 
                     {{-- HTMLフォームは基本的に GET, POSTしか送れない --}}
                     <form 
-                        action="{{ url('/tasks/' . $task->id) }}"
+                        action="{{ route('tasks.destroy', $task) }}"
                         method="POST"
                         style="display: inline;"
                         onsubmit="return confirm('本当に削除しますか？');"
@@ -61,7 +61,7 @@
 		</ul>
 
         {{-- 新規タスクフォーム --}}
-		<form action="{{ url('/tasks') }}" method="POST" class="mt-6">
+		<form action="{{ route('tasks.store') }}" method="POST" class="mt-6">
 		@csrf
 		<div class=" flex gap-2">
 			<input
