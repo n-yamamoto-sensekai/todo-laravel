@@ -59,10 +59,14 @@ class TaskController extends Controller
     {
         $request->validate([
             'title'=> 'required|max:255',
+			'due_date' => 'nullable|date',
+			'memo' => 'nullable|max:1000',
         ]);
 
         $task->update([
             'title'=> $request->input('title'),
+            'due_date' => $request->input('due_date'),
+            'memo' => $request->input('memo'),
         ]);
 
         return redirect()->route('tasks.index')->with('message','タスクを更新しました。');

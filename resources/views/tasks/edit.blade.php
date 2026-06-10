@@ -21,6 +21,31 @@
 
             <x-input-error name="title" />
 
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700">
+                        期限
+                    </label>
+                    <input
+                        type="date"
+                        name="due_date"
+                        value="{{ old('due_date', $task->due_date) }}"
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                    <x-input-error name="due_date"/>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700">
+                        メモ
+                    </label>
+                    <textarea
+                        name="memo"
+                        rows="4"
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >{{ old('memo', $task->memo) }}</textarea>
+
+                    <x-input-error name="memo"/>
+                </div>
         </form>
 
         <a href="{{ route('tasks.index') }}" class="text-blue-600 hover:underline">
