@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 
 class TaskController extends Controller
@@ -33,13 +34,8 @@ class TaskController extends Controller
     }
 
     // 追加
-    public function store(Request $request)
+    public function store(TaskRequest $request) // TaskRequestのrules()を使って入力チェックしてくれる
     {
-        // バリデーション
-        $request->validate([
-            'title' => 'required|max:255',
-        ]);
-
         Task::create([
             // params[:title]的な感じ
             'title' => $request->input('title'),
@@ -55,14 +51,8 @@ class TaskController extends Controller
     }
 
     // 更新
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
-        $request->validate([
-            'title'=> 'required|max:255',
-			'due_date' => 'nullable|date',
-			'memo' => 'nullable|max:1000',
-        ]);
-
         $task->update([
             'title'=> $request->input('title'),
             'due_date' => $request->input('due_date'),
