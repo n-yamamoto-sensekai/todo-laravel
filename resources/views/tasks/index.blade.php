@@ -58,13 +58,26 @@
     @forelse ($tasks as $task)
         <li class="border rounded p-4 flex justify-between items-center">
 
+            {{-- タスク内容 --}}
             <div>
                 <span class="{{ $task->is_done ? 'line-through text-gray-400' : '' }}">
                     {{ $task->title }}
                 </span>
                 <span class="ml-2 text-sm {{ $task->is_done ? 'text-green-600' : 'text-gray-500' }}">
                     {{ $task->is_done ? '完了' : '未完了' }}
-                </span>    
+                </span>
+
+                @if ($task->due_date)
+                    <p class="ml-2 text-sm text-gray-500">
+                        期限：{{ $task->due_date }}
+                    </p>
+                @endif
+
+                @if ($task->memo)
+                    <p class="mt-1 text-sm text-gray-500">
+                        メモ：{{ Str::limit($task->memo, 30) }}
+                    </p>
+                @endif
             </div>
 
 
