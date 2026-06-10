@@ -56,53 +56,10 @@
     {{-- タスク一覧  --}}
     <ul class="space-y-2">
     @forelse ($tasks as $task)
-        <li class="border rounded p-4 flex justify-between items-center">
+        
+        {{-- タスク内容 --}}
+        <x-task-item :task="$task"/>
 
-            <div>
-                <span class="{{ $task->is_done ? 'line-through text-gray-400' : '' }}">
-                    {{ $task->title }}
-                </span>
-                <span class="ml-2 text-sm {{ $task->is_done ? 'text-green-600' : 'text-gray-500' }}">
-                    {{ $task->is_done ? '完了' : '未完了' }}
-                </span>    
-            </div>
-
-
-            <div class="flex gap-2">
-
-                {{-- 完了フラグ --}}
-                <form action="{{ route('tasks.toggle', $task) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-
-                    <x-success-button>
-                        {{ $task->is_done ? '未完了に戻す' : '完了' }}
-                    </x-success-button>
-                </form>
-
-                <a 
-                    href="{{ route('tasks.edit', $task) }}"
-                    class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
-                >
-                    編集
-                </a>
-
-                {{-- HTMLフォームは基本的に GET, POSTしか送れない --}}
-                <form 
-                    action="{{ route('tasks.destroy', $task) }}"
-                    method="POST"
-                    style="display: inline;"
-                    onsubmit="return confirm('本当に削除しますか？');"
-                >
-                    {{-- Laravelに DELETEリクエストとして送るためのBlade記述 --}}
-                    @csrf
-                    @method('DELETE')
-                    <x-danger-button>
-                        削除
-                    </x-danger-button>
-                </form>
-            </div>
-        </li>
     @empty
         <li class="rounded border border-dashed p-4 text-gray-500">
         タスクはまだありません。
@@ -127,4 +84,7 @@
     <x-input-error name="title" />
 
     </form>
+
+    {{-- モーダル --}}
+    <x-task-modal />
 @endsection
