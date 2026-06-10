@@ -78,10 +78,41 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('message','タスクの状態を更新しました');
     }
 
+    // 一括完了
+    public function markAllDone()
+    {
+        Task::query()->update([
+            'is_done' => true,
+        ]);
+        
+        return redirect()->route('tasks.index')->with('message','すべてのタスクを完了にしました');
+    }
+
+	// 一括未完了
+    public function markAllUndone()
+    {
+        Task::query()->update([
+            'is_done' => false,
+        ]);
+        
+        return redirect()->route('tasks.index')->with('message','すべてのタスクを未完了にしました');
+    }
+
     // 削除
     public function destroy(Task $task)  // Route Model Binding
     {
         $task->delete();
         return redirect()->route('tasks.index')->with('message', 'タスクを削除しました');
     }
+
+	// 完了タスクの一括削除
+	public function destroyCompleted()
+	{
+		Task::query()
+			->where('is_done', true)
+			->delete();
+
+		return redirect()->route('tasks.index')->with('message','完了済みタスクを削除しました。');
+	}
+
 }
