@@ -21,6 +21,38 @@
         </x-filter-link>
     </div>
 
+    {{-- 一括操作 --}}
+    <div class="mb-4 flex gap-2">
+        <form action="{{ route('tasks.markAllDone') }}" method="POST">
+            @csrf
+            @method('PATCH')
+
+            <x-success-button>
+                すべて完了する
+            </x-success-button>
+        </form>
+        <form action="{{ route('tasks.markAllUndone') }}" method="POST">
+            @csrf
+            @method('PATCH')
+
+            <x-success-button>
+                すべて未完了に戻す
+            </x-success-button>
+        </form>
+
+        <form 
+            action="{{ route('tasks.destroyCompleted') }}"
+            method="POST"
+            onsubmit="return confirm('完了済みタスクをすべて削除しますか？');"
+        >
+            @csrf
+            @method('DELETE')
+            <x-danger-button>
+                完了済みタスクを削除
+            </x-danger-button>
+        </form>
+    </div>
+
     {{-- タスク一覧  --}}
     <ul class="space-y-2">
     @forelse ($tasks as $task)
