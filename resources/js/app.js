@@ -18,6 +18,10 @@ function closeTaskModal() {
     $('#task-modal').addClass('hidden');
 }
 
+function clearTaskModalErrors() {
+    $('#modal-task-title-error').text('');
+}
+
 function setTaskModalValues(title, dueDate, memo) {
     $('#modal-task-title').val(title);
     $('#modal-task-due-date').val(dueDate);
@@ -86,6 +90,7 @@ $(function () {
         const dueDate = $(this).data('due-date')
         const memo = $(this).data('memo')
 
+        clearTaskModalErrors();  // モーダル内のエラーを消去
         setTaskModalValues(title, dueDate, memo);  // モーダルの中身にタスクの値をセット
         setTaskFormActions(id);   // フォームの送り先をセット
         
@@ -106,9 +111,18 @@ $(function () {
             dataType: 'json',        // サーバーから返ってくるレスポンスをJSONとして扱う
             success: function (response) {   // Ajax通信が成功した時に返ってきたレスポンスをもって実行
                 console.log(response);
+
+                clearTaskModalErrors();
                 updateTaskItem(response.task);  // タスク一覧の表示を更新
                 closeTaskModal(); // モーダルを閉じる
             },
+            error: function (xhr) {
+                const errors = xhr.responseJSON.errors;
+
+                if (errors.title) {
+                    $('#modal-task-title-error').text(errors.title[0]);
+                }
+            }
         });
     });
 
