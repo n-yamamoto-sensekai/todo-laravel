@@ -59,6 +59,14 @@ class TaskController extends Controller
             'memo' => $request->input('memo'),
         ]);
 
+        // Ajaxリクエストの場合jsonでレスポンスを返す
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'タスクを更新しました。',
+                'task' => $task,
+            ]);
+        }
+
         return redirect()->route('tasks.index')->with('message','タスクを更新しました。');
     }
 

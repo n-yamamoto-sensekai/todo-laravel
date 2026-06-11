@@ -67,6 +67,38 @@ class TaskTest extends TestCase
         ]);
     }
 
+    // タスクがAjaxで更新できる
+    public function test_task_can_be_updated_with_json_response(): void
+    {
+        $task = Task::factory()->create([
+            'title'=> 'Ajax更新前',
+        ]);
+
+        $response = $this->putJson('/tasks/' . $task->id, [  // putJson：$request->expectsJson() が true になりやすい
+            'title' => 'Ajax更新後',
+            'due_date' => '2026-07-01',
+            'memo' => 'Ajax更新テスト',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'タスクを更新しました。',
+            'task' => [
+                'id' => $task->id,
+                'title' => 'Ajax更新後',
+                'due_date' => '2026-07-01',
+                'memo' => 'Ajax更新テスト',
+            ],
+        ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'title' => 'Ajax更新後',
+            'due_date' => '2026-07-01',
+            'memo' => 'Ajax更新テスト',
+        ]);
+    }
+
     // タスクが削除できる
     public function test_task_can_be_deleted(): void
     {
