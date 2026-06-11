@@ -1,8 +1,12 @@
 @props(['task'])
-<li class="border rounded p-4 flex justify-between items-center">
+<li 
+    id="task-item-{{ $task->id }}"  {{-- Ajaxで更新時JS側で見つけられるように --}}
+    class="border rounded p-4 flex justify-between items-center"
+>
     <div>
         <button
             type="button"
+            id="task-title-{{ $task->id }}"
             class="js-open-task-model text-left {{ $task->is_done ? 'line-through text-gray-400' : '' }}"
             data-id="{{ $task->id }}"
             data-title="{{ $task->title }}"
@@ -16,17 +20,23 @@
             {{ $task->is_done ? '完了' : '未完了' }}
         </span>
 
-        @if ($task->due_date)
-            <p class="ml-2 text-sm text-gray-500">
+        <p {{-- JS側でidで探せるよう、due_dateがない場合も空の<p>を置く --}}
+            id="task-due-date-{{ $task->id }}"
+            class="ml-2 text-sm text-gray-500"
+        >
+            @if ($task->due_date)
                 期限：{{ $task->due_date }}
-            </p>
-        @endif
+            @endif
+        </p>
 
-        @if ($task->memo)
-            <p class="mt-1 text-sm text-gray-500">
+        <p 
+            id="task-memo-{{ $task->id }}"
+            class="mt-1 text-sm text-gray-500"
+        >
+            @if ($task->memo)
                 メモ：{{ Str::limit($task->memo, 30) }}
-            </p>
-        @endif
+            @endif
+        </p>
     </div>
 
 
