@@ -27,6 +27,8 @@ class TaskController extends Controller
         // 完了ステータス順 > 新規順 に並び替えて実際に取得
         $tasks = $query
             ->orderBy('is_done')
+            ->orderByRaw('due_date IS NULL') // 期限がない => 1(true), ある => 0(false)
+            ->orderBy('due_date')
             ->latest()
             ->get();
 
@@ -63,7 +65,13 @@ class TaskController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'message' => 'タスクを更新しました。',
-                'task' => $task,
+                'task' => [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'is_done' => $task->is_done,
+                    'due_date' => $task->due_date?->format('Y-m-d'),
+                    'memo' => $task->memo,
+                ],
             ]);
         }
 
@@ -81,7 +89,13 @@ class TaskController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'message' => 'タスクの状態を更新しました',
-                'task' => $task,
+                'task' => [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'is_done' => $task->is_done,
+                    'due_date' => $task->due_date?->format('Y-m-d'),
+                    'memo' => $task->memo,
+                ],
             ]);
         }
 

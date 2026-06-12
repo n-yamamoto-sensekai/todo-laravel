@@ -10,4 +10,9 @@ class Task extends Model
     // Task::factory()を使えるようにする
     use HasFactory;
     protected $fillable = ['title', 'is_done', 'due_date', 'memo']; // Strong Parameterのような感じ（受け付けるリクエストの要素）
+
+    protected $casts = [
+        'is_done' => 'boolean',
+        'due_date' => 'date',
+    ];
 }

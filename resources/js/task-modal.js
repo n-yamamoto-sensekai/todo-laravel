@@ -57,6 +57,51 @@ function truncateText(text, maxLength) {
     return text.slice(0, maxLength) + '...';
 }
 
+// 期限の表示分け
+function formatDueDateText(dueDate) {
+    if (!dueDate) {
+        return '';
+    }
+
+    const today = new Date();   // 現在時刻を含んだ今日の日時
+    const targetDate = new Date(dueDate);
+
+    today.setHours(0, 0, 0, 0);  // 00:00:00.000 にそろえる
+    targetDate.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.round((targetDate - today) / (1000 * 60 * 60 * 24));  // ミリ秒の差を日数に。Math.round()：少数を一番近い整数に丸める
+
+    if (diffDays === 0) {
+        return '今日';
+    }
+    if (diffDays === -1) {
+        return '昨日';
+    }
+    if (diffDays === 1) {
+        return '明日';
+    }
+    return dueDate;
+}
+
+// 期限の色分け
+function updateDueDateClass($taskDueDate, dueDate, isDone) {
+    $taskDueDate.removeClass('text-gray-500 text-red-600');
+
+    const today = new Date();
+    const targetDate = new Date(dueDate);
+
+    today.setHours(0, 0, 0, 0);
+    targetDate.setHours(0, 0, 0, 0);
+
+    const isOverdue = dueDate && targetDate < today;
+
+    if (isOverdue && !isDone) {
+        $taskDueDate.addClass('text-red-600');
+    } else {
+        $taskDueDate.addClass('text-gray-500');
+    }
+}
+
 function updateTaskItem(task) {
     const $taskTitle = $('#task-title-' + task.id);
     const $taskDueDate = $('#task-due-date-' + task.id);
@@ -65,10 +110,12 @@ function updateTaskItem(task) {
     $taskTitle.text(task.title);
 
     if (task.due_date) {
-        $taskDueDate.text('期限：' + task.due_date);
+        $taskDueDate.text('期限：' + formatDueDateText(task.due_date));
     } else {
         $taskDueDate.text('');
     }
+
+    updateDueDateClass($taskDueDate, task.due_date, task.is_done);
 
     if (task.memo) {
         $taskMemo.text('メモ：' + truncateText(task.memo, 15));
@@ -91,6 +138,7 @@ function updateTaskDoneStatus(task) {
     const $taskTitle = $('#task-title-' + task.id);
     const $toggleButton = $('#task-toggle-button-' + task.id);
     const $statusLabel = $('#task-status-label-' + task.id);
+    const $taskDueDate = $('#task-due-date-' + task.id);
 
     if (task.is_done) {
         $taskTitle.addClass('line-through text-gray-400');
@@ -114,6 +162,8 @@ function updateTaskDoneStatus(task) {
         $taskTitle.data('is-done', 0);
         $taskTitle.attr('data-is-done', 0);
     }
+    
+    updateDueDateClass($taskDueDate, task.due_date, task.is_done);
 }
 
 function removeTaskItem(taskId) {
