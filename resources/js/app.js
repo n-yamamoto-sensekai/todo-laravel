@@ -34,9 +34,26 @@ function setTaskFormActions(id) {
 }
 
 function submitTaskDeleteForm() {
-    if (confirm('このタスクを削除しますか？')) {
-        $('#modal-task-delete-form').submit();
-    }
+    if (!confirm('このタスクを削除しますか？')) {
+        return;
+    }    
+    const $deleteForm = $('#modal-task-delete-form');
+
+    $.ajax({
+        url: $deleteForm.attr('action'),
+        method: 'DELETE',
+        dataType: 'json',
+        success: function (response) {
+            console.log(response);
+            removeTaskItem(response.task_id);   // タスク一覧からタスクを削除
+            closeTaskModal();
+        },
+        error: function (xhr) {
+            console.log('status:', xhr.status);
+            console.log('responseJSON:', xhr.responseJSON);
+            console.log('resoponseTEXT:', xhr.responseTEXT);
+        }
+    });
 }
 
 // 最大文字数で省略
@@ -78,6 +95,10 @@ function updateTaskItem(task) {
     $taskTitle.attr('data-title', task.title);
     $taskTitle.attr('data-due-date', task.due_date);
     $taskTitle.attr('data-memo', task.memo);
+}
+
+function removeTaskItem(taskId) {
+    $('#task-item-' + taskId).remove();
 }
 
 $(function () {
