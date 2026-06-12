@@ -26,9 +26,9 @@
 
 <li 
     id="task-item-{{ $task->id }}"  {{-- Ajaxで更新時JS側で見つけられるように --}}
-    class="border rounded p-4 flex justify-between items-center"
+    class="border rounded size-full p-4 flex justify-between items-center gap-3"
 >
-    <div>
+    <div class="flex-1">
         <button
             type="button"
             id="task-title-{{ $task->id }}"
@@ -68,7 +68,6 @@
         </p>
     </div>
 
-
     <div class="flex gap-2">
 
         {{-- 完了フラグ --}}
@@ -91,7 +90,7 @@
 
         <a 
             href="{{ route('tasks.edit', $task) }}"
-            class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
+            class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 hidden"
         >
             編集
         </a>
@@ -100,7 +99,7 @@
         <form 
             action="{{ route('tasks.destroy', $task) }}"
             method="POST"
-            style="display: inline;"
+            style="display: none;"
             onsubmit="return confirm('本当に削除しますか？');"
         >
             {{-- Laravelに DELETEリクエストとして送るためのBlade記述 --}}
