@@ -35,7 +35,7 @@
             class="js-open-task-model text-left {{ $task->is_done ? 'line-through text-gray-400' : '' }}"
             data-id="{{ $task->id }}"
             data-title="{{ $task->title }}"
-            data-due-date="{{ $task->due_date }}"
+            data-due-date="{{ $task->due_date?->format('Y-m-d') }}"
             data-memo="{{ $task->memo }}"
             data-is-done="{{ $task->is_done ? 1 : 0 }}"
         >

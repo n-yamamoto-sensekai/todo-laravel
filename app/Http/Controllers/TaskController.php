@@ -63,7 +63,13 @@ class TaskController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'message' => 'タスクを更新しました。',
-                'task' => $task,
+                'task' => [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'is_done' => $task->is_done,
+                    'due_date' => $task->due_date?->format('Y-m-d'),
+                    'memo' => $task->memo,
+                ],
             ]);
         }
 
@@ -81,7 +87,13 @@ class TaskController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'message' => 'タスクの状態を更新しました',
-                'task' => $task,
+                'task' => [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'is_done' => $task->is_done,
+                    'due_date' => $task->due_date?->format('Y-m-d'),
+                    'memo' => $task->memo,
+                ],
             ]);
         }
 
