@@ -29,13 +29,13 @@ class TaskRequest extends BaseRequest
         ];
     }
 
-    public function messages(): array
-    {
-        return [
-            'title.required'=> 'タスク名は必須です。',
-            'title.max'=> 'タスク名は255文字以内で入力してください',
-            'due_date.date'=> '期限は日付として正しい形式で入力してください',
-            'memo.max'=> 'メモは1000文字以内で入力してください',
-        ];
-    }
+    // public function messages(): array
+    // {
+    //     return [
+    //         'title.required'=> 'タスク名は必須です。',
+    //         'title.max'=> 'タスク名は255文字以内で入力してください',
+    //         'due_date.date'=> '期限は日付として正しい形式で入力してください',
+    //         'memo.max'=> 'メモは1000文字以内で入力してください',
+    //     ];
+    // }
 }
