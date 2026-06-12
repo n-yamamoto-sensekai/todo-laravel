@@ -27,6 +27,8 @@ class TaskController extends Controller
         // 完了ステータス順 > 新規順 に並び替えて実際に取得
         $tasks = $query
             ->orderBy('is_done')
+            ->orderByRaw('due_date IS NULL') // 期限がない => 1(true), ある => 0(false)
+            ->orderBy('due_date')
             ->latest()
             ->get();
 
