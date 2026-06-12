@@ -97,6 +97,36 @@ function updateTaskItem(task) {
     $taskTitle.attr('data-memo', task.memo);
 }
 
+function updateTaskDoneStatus(task) {
+    const $taskTitle = $('#task-title-' + task.id);
+    const $toggleButton = $('#task-toggle-button-' + task.id);
+    const $statusLabel = $('#task-status-label-' + task.id);
+
+    if (task.is_done) {
+        $taskTitle.addClass('line-through text-gray-400');
+        $toggleButton.text('未完了に戻す');
+        $statusLabel
+            .text('完了')
+            .removeClass('text-gray-500')
+            .addClass('text-green-600');
+
+        $taskTitle.data('is-done', 1);
+        $taskTitle.attr('data-is-done', 1);
+
+    } else {
+        $taskTitle.removeClass('line-through text-gray-400');
+        $toggleButton.text('完了');
+        $statusLabel
+            .text('未完了')
+            .removeClass('text-green-600')
+            .addClass('text-gray-500');
+
+        $taskTitle.data('is-done', 0);
+        $taskTitle.attr('data-is-done', 0);
+    }
+}
+
+
 function removeTaskItem(taskId) {
     $('#task-item-' + taskId).remove();
 }
@@ -143,6 +173,28 @@ $(function () {
                 if (errors.title) {
                     $('#modal-task-title-error').text(errors.title[0]);
                 }
+            }
+        });
+    });
+
+    // 完了状態のAjax更新
+    $('.js-toggle-task-form').on('submit', function (event) {
+
+        event.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'PATCH',
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                updateTaskDoneStatus(response.task);
+            },
+            error: function (xhr) {
+                console.log('status:', xhr.status);
+                console.log('responseJSON:', xhr.responseJSON);
+                console.log('resoponseTEXT:', xhr.responseTEXT);
             }
         });
     });

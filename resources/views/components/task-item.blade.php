@@ -12,11 +12,15 @@
             data-title="{{ $task->title }}"
             data-due-date="{{ $task->due_date }}"
             data-memo="{{ $task->memo }}"
+            data-is-done="{{ $task->is_done ? 1 : 0 }}"
         >
             {{ $task->title }}
         </button>
 
-        <span class="ml-2 text-sm {{ $task->is_done ? 'text-green-600' : 'text-gray-500' }}">
+        <span
+            id="task-status-label-{{ $task->id }}"
+            class="ml-2 text-sm {{ $task->is_done ? 'text-green-600' : 'text-gray-500' }}"
+        >
             {{ $task->is_done ? '完了' : '未完了' }}
         </span>
 
@@ -43,13 +47,21 @@
     <div class="flex gap-2">
 
         {{-- 完了フラグ --}}
-        <form action="{{ route('tasks.toggle', $task) }}" method="POST">
+        <form
+            action="{{ route('tasks.toggle', $task) }}"
+            method="POST"
+            class="js-toggle-task-form"
+        >
             @csrf
             @method('PATCH')
 
-            <x-success-button>
+            <button
+                type="submit"
+                id="task-toggle-button-{{ $task->id }}"
+                class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+            >
                 {{ $task->is_done ? '未完了に戻す' : '完了' }}
-            </x-success-button>
+            </button>
         </form>
 
         <a 

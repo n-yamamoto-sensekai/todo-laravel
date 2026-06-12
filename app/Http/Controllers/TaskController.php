@@ -71,11 +71,19 @@ class TaskController extends Controller
     }
 
     // 完了フラグの切り替え
-    public function toggle(Task $task)
+    public function toggle(Request $request, Task $task)
     {
         $task->update([
             'is_done' => ! $task->is_done,  // !：真偽値を逆にする演算子
         ]);
+
+        // Ajaxリクエストの場合jsonでレスポンスを返す
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'タスクの状態を更新しました',
+                'task' => $task,
+            ]);
+        }
 
         return redirect()->route('tasks.index')->with('message','タスクの状態を更新しました');
     }

@@ -108,8 +108,6 @@ class TaskTest extends TestCase
 
         $response = $this->deleteJson('/tasks/' . $task->id);
 
-        // dd($response->content());
-
         $response->assertStatus(200);
         $response->assertJson([
             'message' => 'タスクを削除しました',
@@ -146,6 +144,30 @@ class TaskTest extends TestCase
         $response = $this->patch('/tasks/' . $task->id . '/toggle');
 
         $response->assertRedirect('/tasks');
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'is_done' => true,
+        ]);
+    }
+
+    // Ajaxで完了/未完了を切り替えられる
+    public function test_task_done_status_can_be_toggled_with_json_response(): void
+    {
+        $task = Task::factory()->create([
+            'is_done' => false,
+        ]);
+
+        $response = $this->patchJson('/tasks/' . $task->id . '/toggle');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'タスクの状態を更新しました',
+            'task' => [
+                'id' => $task->id,
+                'is_done' => true,
+            ],
+        ]);
+
         $this->assertDatabaseHas('tasks', [
             'id' => $task->id,
             'is_done' => true,
