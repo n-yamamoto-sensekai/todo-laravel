@@ -99,6 +99,28 @@ class TaskTest extends TestCase
         ]);
     }
 
+    // タスクがAjaxで削除できる
+    public function test_task_can_be_deleted_with_json_response(): void
+    {
+        $task = Task::factory()->create([
+            'title' => 'Ajax削除されるタスク',
+        ]);
+
+        $response = $this->deleteJson('/tasks/' . $task->id);
+
+        // dd($response->content());
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'タスクを削除しました',
+            'task_id' => $task->id,
+        ]);
+
+        $this->assertDatabaseMissing('tasks', [
+            'id' => $task->id,
+        ]);
+    }
+
     // タスクが削除できる
     public function test_task_can_be_deleted(): void
     {
