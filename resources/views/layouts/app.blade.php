@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">  {{-- CSRFトークンの設置 --}}
 	<title>@yield('title')</title> {{-- @yield：各ページから差し込まれる場所 --}}
 	@vite(['resources/css/app.css', 'resources/js/app.js'])	{{-- vite読み込み --}}
 </head>

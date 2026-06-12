@@ -59,15 +59,31 @@ class TaskController extends Controller
             'memo' => $request->input('memo'),
         ]);
 
+        // Ajaxリクエストの場合jsonでレスポンスを返す
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'タスクを更新しました。',
+                'task' => $task,
+            ]);
+        }
+
         return redirect()->route('tasks.index')->with('message','タスクを更新しました。');
     }
 
     // 完了フラグの切り替え
-    public function toggle(Task $task)
+    public function toggle(Request $request, Task $task)
     {
         $task->update([
             'is_done' => ! $task->is_done,  // !：真偽値を逆にする演算子
         ]);
+
+        // Ajaxリクエストの場合jsonでレスポンスを返す
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'タスクの状態を更新しました',
+                'task' => $task,
+            ]);
+        }
 
         return redirect()->route('tasks.index')->with('message','タスクの状態を更新しました');
     }
@@ -93,9 +109,19 @@ class TaskController extends Controller
     }
 
     // 削除
-    public function destroy(Task $task)  // Route Model Binding
+    public function destroy(Request $request, Task $task)  // Route Model Binding
     {
+        $taskId = $task->id;
         $task->delete();
+
+        // Ajaxリクエストの場合jsonでレスポンスを返す
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'タスクを削除しました',
+                'task_id' => $taskId,
+            ]);
+        }
+
         return redirect()->route('tasks.index')->with('message', 'タスクを削除しました');
     }
 

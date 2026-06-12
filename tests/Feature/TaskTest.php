@@ -67,6 +67,58 @@ class TaskTest extends TestCase
         ]);
     }
 
+    // タスクがAjaxで更新できる
+    public function test_task_can_be_updated_with_json_response(): void
+    {
+        $task = Task::factory()->create([
+            'title'=> 'Ajax更新前',
+        ]);
+
+        $response = $this->putJson('/tasks/' . $task->id, [  // putJson：$request->expectsJson() が true になりやすい
+            'title' => 'Ajax更新後',
+            'due_date' => '2026-07-01',
+            'memo' => 'Ajax更新テスト',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'タスクを更新しました。',
+            'task' => [
+                'id' => $task->id,
+                'title' => 'Ajax更新後',
+                'due_date' => '2026-07-01',
+                'memo' => 'Ajax更新テスト',
+            ],
+        ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'title' => 'Ajax更新後',
+            'due_date' => '2026-07-01',
+            'memo' => 'Ajax更新テスト',
+        ]);
+    }
+
+    // タスクがAjaxで削除できる
+    public function test_task_can_be_deleted_with_json_response(): void
+    {
+        $task = Task::factory()->create([
+            'title' => 'Ajax削除されるタスク',
+        ]);
+
+        $response = $this->deleteJson('/tasks/' . $task->id);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'タスクを削除しました',
+            'task_id' => $task->id,
+        ]);
+
+        $this->assertDatabaseMissing('tasks', [
+            'id' => $task->id,
+        ]);
+    }
+
     // タスクが削除できる
     public function test_task_can_be_deleted(): void
     {
@@ -92,6 +144,30 @@ class TaskTest extends TestCase
         $response = $this->patch('/tasks/' . $task->id . '/toggle');
 
         $response->assertRedirect('/tasks');
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'is_done' => true,
+        ]);
+    }
+
+    // Ajaxで完了/未完了を切り替えられる
+    public function test_task_done_status_can_be_toggled_with_json_response(): void
+    {
+        $task = Task::factory()->create([
+            'is_done' => false,
+        ]);
+
+        $response = $this->patchJson('/tasks/' . $task->id . '/toggle');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'タスクの状態を更新しました',
+            'task' => [
+                'id' => $task->id,
+                'is_done' => true,
+            ],
+        ]);
+
         $this->assertDatabaseHas('tasks', [
             'id' => $task->id,
             'is_done' => true,
