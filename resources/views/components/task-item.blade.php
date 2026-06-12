@@ -1,4 +1,29 @@
 @props(['task'])
+
+{{-- 期限の表示分け --}}
+@php
+    $dueDateText = null;
+    $dueDateClass = 'text-gray-500';
+
+    if ($task->due_date) {
+        if ($task->due_date->isToday()) {
+            $dueDateText = '今日';
+        } elseif ($task->due_date->isYesterday()) {
+            $dueDateText = '昨日';
+        } elseif ($task->due_date->isTomorrow()) {
+            $dueDateText = '明日';
+        } else {
+            $dueDateText = $task->due_date->format('Y-m-d');
+        }
+
+        $isOverdue = $task->due_date->lt(today());  // lessThan()の省略形 返り値はboolean
+
+        if ($isOverdue && ! $task->is_done) {
+            $dueDateClass = 'text-red-600';
+        }
+    }
+@endphp
+
 <li 
     id="task-item-{{ $task->id }}"  {{-- Ajaxで更新時JS側で見つけられるように --}}
     class="border rounded p-4 flex justify-between items-center"
@@ -26,10 +51,10 @@
 
         <p {{-- JS側でidで探せるよう、due_dateがない場合も空の<p>を置く --}}
             id="task-due-date-{{ $task->id }}"
-            class="ml-2 text-sm text-gray-500"
+            class="text-sm {{ $dueDateClass }}"
         >
-            @if ($task->due_date)
-                期限：{{ $task->due_date }}
+            @if ($dueDateText)
+                期限：{{ $dueDateText }}
             @endif
         </p>
 
