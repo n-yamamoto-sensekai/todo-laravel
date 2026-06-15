@@ -7,7 +7,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+use App\Http\Controllers\TaskGroupController;
 use App\Http\Controllers\TaskController;
+
+Route::get('/task-groups', [TaskGroupController::class, 'index'])
+    ->name('task-groups.index');
+
+Route::get('/task-groups/{taskGroup}', [TaskGroupController::class, 'show'])
+    ->name('task-groups.show');
 
 // Todoの完了フラグ変更用独自Route
 Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])

@@ -26,6 +26,7 @@ class TaskRequest extends BaseRequest
             'title'=> 'required|max:255',
 			'due_date' => 'nullable|date',
 			'memo' => 'nullable|max:1000',
+            'task_group_id' => 'nullable|exists:task_groups,id', // 存在するtask_group.idだけ許可する
         ];
     }
 

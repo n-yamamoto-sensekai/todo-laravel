@@ -41,9 +41,18 @@ class TaskController extends Controller
         Task::create([
             // params[:title]的な感じ
             'title' => $request->input('title'),
+            'task_group_id' => $request->input('task_group_id'),
         ]);
 
-        return redirect()->route('tasks.index')->with('message', 'タスクを追加しました');  // フラッシュメッセージ
+        if ($request->filled('task_group_id')) {
+            return redirect()
+                ->route('task-groups.show', $request->input('task_group_id'))
+                ->with('message', 'タスクを追加しました');
+        }
+
+        return redirect()
+            ->route('tasks.index')
+            ->with('message', 'タスクを追加しました');
     }
 
     // 編集画面表示
