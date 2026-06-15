@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\TaskGroupRequest;
 use App\Models\TaskGroup;
 
 class TaskGroupController extends Controller
@@ -40,12 +41,8 @@ class TaskGroupController extends Controller
         return view('task-groups.show', compact('taskGroup', 'tasks', 'filter', 'taskGroups'));
     }
 
-    public function store(Request $request)
+    public function store(TaskGroupRequest $request)
     {
-        $request->validate([
-            'name'=> 'required|max:255',
-        ]);
-
         TaskGroup::create([
             'name'=> $request->input('name'),
         ]);
@@ -58,12 +55,8 @@ class TaskGroupController extends Controller
         return view('task-groups.edit', compact('taskGroup'));
     }
 
-    public function update(Request $request, TaskGroup $taskGroup)
+    public function update(TaskGroupRequest $request, TaskGroup $taskGroup)
     {
-        $request->validate([
-            'name'=> 'required|max:255',
-        ]);
-
         $taskGroup->update([
             'name'=> $request->input('name'),
         ]);
