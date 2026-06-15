@@ -88,7 +88,7 @@
 
                     <button
                         type="button"
-                        id="js-delete-task-form-modal"
+                        id="js-delete-task-from-modal"
                         class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                     >
                         削除
