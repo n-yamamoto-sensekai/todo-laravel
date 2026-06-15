@@ -20,17 +20,17 @@
     {{-- フィルター --}}
     <div class="mb-4 flex gap-2">
         <x-filter-link
-            href="{{ route('task-groups.show', ['taskGroup' => $taskGroup, 'filter' => 'all']) }}" :active="$filter === 'all'"
+            href="{{ route('task-groups.show', ['task_group' => $taskGroup, 'filter' => 'all']) }}" :active="$filter === 'all'"
         >
             すべて
         </x-filter-link>
         <x-filter-link
-            href="{{ route('task-groups.show', ['taskGroup' => $taskGroup, 'filter' => 'active']) }}" :active="$filter === 'active'"
+            href="{{ route('task-groups.show', ['task_group' => $taskGroup, 'filter' => 'active']) }}" :active="$filter === 'active'"
         >
             未完了
         </x-filter-link>
         <x-filter-link
-            href="{{ route('task-groups.show', ['taskGroup' => $taskGroup, 'filter' => 'completed']) }}" :active="$filter === 'completed'"
+            href="{{ route('task-groups.show', ['task_group' => $taskGroup, 'filter' => 'completed']) }}" :active="$filter === 'completed'"
         >
             完了済み
         </x-filter-link>
