@@ -13,8 +13,20 @@ use App\Http\Controllers\TaskController;
 Route::get('/task-groups', [TaskGroupController::class, 'index'])
     ->name('task-groups.index');
 
+Route::post('/task-groups', [TaskGroupController::class, 'store'])
+    ->name('task-groups.store');
+
 Route::get('/task-groups/{taskGroup}', [TaskGroupController::class, 'show'])
     ->name('task-groups.show');
+
+Route::get('/task-groups/{taskGroup}/edit', [TaskGroupController::class, 'edit'])
+    ->name('task-groups.edit');
+
+Route::put ('/task-groups/{taskGroup}', [TaskGroupController::class, 'update'])
+    ->name('task-groups.update');
+
+Route::delete ('/task-groups/{taskGroup}', [TaskGroupController::class, 'destroy'])
+    ->name('task-groups.destroy');
 
 // Todoの完了フラグ変更用独自Route
 Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])

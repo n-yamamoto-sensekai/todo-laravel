@@ -12,10 +12,27 @@
         </a>
     </div>
 
-    <ul class="space-y-3">
+    <x-flash-message />
+
+    {{-- 新規グループフォーム --}}
+    <form
+        action="{{ route('task-groups.store') }}"
+        method="POST"
+        class="flex gap-2"
+    >
+        @csrf
+        <x-text-input name="name" :value="old('name')" />
+        <x-primary-button>
+            追加
+        </x-primary-button>
+    </form>
+
+    <x-input-error name="name" />
+
+    <ul class="mt-6 grid grid-cols-3 gap-3">
         @forelse ($taskGroups as $taskGroup)
             <li
-                class="border rounded p-4 hover:bg-gray-50"
+                class="border rounded p-4 grid-item hover:bg-gray-50"
             >
                 <a
                     href="{{ route('task-groups.show', $taskGroup) }}"
@@ -29,6 +46,25 @@
                         タスク数：{{ $taskGroup->task_count ?? $taskGroup->tasks->count() }}
                     </div>
                 </a>
+                <div class="mt-3 flex justify-end items-center gap-2">
+                    <a
+                        href="{{ route('task-groups.edit', $taskGroup) }}"
+                        class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
+                    >
+                        編集
+                    </a>
+                    <form 
+                        action="{{ route('task-groups.destroy', $taskGroup) }}"
+                        method="POST"
+                        onsubmit="return confirm('このグループを削除しますか?\n※ 紐づくタスクも削除されます');"
+                    >
+                        @csrf
+                        @method('DELETE')
+                        <x-danger-button>
+                            削除
+                        </x-danger-button>
+                    </form>
+                </div>
             </li>
         @empty
             <li
