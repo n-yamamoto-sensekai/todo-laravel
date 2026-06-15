@@ -2,12 +2,15 @@
 
 use Illuminate\Console\View\Components\Task;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskGroupController;
+use App\Http\Controllers\TaskController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('task-groups.index');
 });
 
-use App\Http\Controllers\TaskController;
+Route::resource('task-groups', TaskGroupController::class)
+    ->except(['create']);
 
 // Todoの完了フラグ変更用独自Route
 Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])

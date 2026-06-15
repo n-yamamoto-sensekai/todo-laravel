@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use App\Models\TaskGroup;
 
 class TaskController extends Controller
 {
@@ -14,7 +15,7 @@ class TaskController extends Controller
         // フィルター機能
         $filter = $request->query("filter", "all");  // URLにfilterがない場合allを使う
 
-        $query = Task::query(); // Taskテーブルからデータを取得する準備をする
+        $query = Task::with('taskGroup'); // Taskテーブルからデータを取得する準備をする（N+1問題対策に紐づくtaskGroupを一緒に取得）
 
         if ($filter === 'active') {
             $query->where('is_done', false);  // 条件で絞り込む
@@ -32,7 +33,10 @@ class TaskController extends Controller
             ->latest()
             ->get();
 
-        return view("tasks.index", compact("tasks", "filter"));
+        // モーダルのグループ選択肢用
+        $taskGroups = TaskGroup::orderBy('name')->get();
+
+        return view("tasks.index", compact("tasks", "filter", "taskGroups"));
     }
 
     // 追加
@@ -41,9 +45,18 @@ class TaskController extends Controller
         Task::create([
             // params[:title]的な感じ
             'title' => $request->input('title'),
+            'task_group_id' => $request->input('task_group_id'),
         ]);
 
-        return redirect()->route('tasks.index')->with('message', 'タスクを追加しました');  // フラッシュメッセージ
+        if ($request->filled('task_group_id')) {
+            return redirect()
+                ->route('task-groups.show', $request->input('task_group_id'))
+                ->with('message', 'タスクを追加しました');
+        }
+
+        return redirect()
+            ->route('tasks.index')
+            ->with('message', 'タスクを追加しました');
     }
 
     // 編集画面表示
@@ -59,7 +72,10 @@ class TaskController extends Controller
             'title'=> $request->input('title'),
             'due_date' => $request->input('due_date'),
             'memo' => $request->input('memo'),
+            'task_group_id' => $request->input('task_group_id'),
         ]);
+
+        $task->load('taskGroup');  // 最新のリレーションを読み込み
 
         // Ajaxリクエストの場合jsonでレスポンスを返す
         if ($request->expectsJson()) {
@@ -71,6 +87,8 @@ class TaskController extends Controller
                     'is_done' => $task->is_done,
                     'due_date' => $task->due_date?->format('Y-m-d'),
                     'memo' => $task->memo,
+                    'task_group_id' => $task->task_group_id,
+                    'task_group_name' => $task->taskGroup?->name,
                 ],
             ]);
         }

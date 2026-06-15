@@ -5,6 +5,15 @@
 @section('content')
     <h1 class="text-3xl font-bold text-blue-600 mb-6">タスクリスト</h1>
 
+    <div class="mb-6">
+        <a
+            href="{{ route('task-groups.index') }}"
+            class="block"
+        >
+            グループ一覧へ
+        </a>
+    </div>
+
     {{-- フラッシュメッセージ --}}
     <x-flash-message />
 
@@ -86,5 +95,5 @@
     </form>
 
     {{-- モーダル --}}
-    <x-task-modal />
+    <x-task-modal :task-groups="$taskGroups"/>
 @endsection

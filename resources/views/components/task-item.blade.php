@@ -32,40 +32,53 @@
         <button
             type="button"
             id="task-title-{{ $task->id }}"
-            class="js-open-task-model text-left {{ $task->is_done ? 'line-through text-gray-400' : '' }}"
+            class="block js-open-task-model text-left {{ $task->is_done ? 'line-through text-gray-400' : '' }}"
             data-id="{{ $task->id }}"
             data-title="{{ $task->title }}"
             data-due-date="{{ $task->due_date?->format('Y-m-d') }}"
             data-memo="{{ $task->memo }}"
             data-is-done="{{ $task->is_done ? 1 : 0 }}"
+            data-task-group-id="{{ $task->task_group_id }}"
         >
             {{ $task->title }}
         </button>
 
-        <span
-            id="task-status-label-{{ $task->id }}"
-            class="ml-2 text-sm {{ $task->is_done ? 'text-green-600' : 'text-gray-500' }}"
-        >
-            {{ $task->is_done ? '完了' : '未完了' }}
-        </span>
+        <div class="mt-1 flex">
+            <p
+                id="task-group-name-{{ $task->id }}"
+                class="text-sm text-gray-500 {{ $task->taskGroup ? 'mr-3' : null }}"
+            >
+                @if ($task->taskGroup)
+                    グループ：{{ $task->taskGroup->name }}
+                @endif
+            </p>
+            <span
+                id="task-status-label-{{ $task->id }}"
+                class="rounded-2xl px-1.5 text-sm {{ $task->is_done ? 'text-green-600 bg-green-100' : 'text-gray-500 bg-gray-200' }}"
+            >
+                {{ $task->is_done ? '完了' : '未完了' }}
+            </span>
+        </div>
 
-        <p {{-- JS側でidで探せるよう、due_dateがない場合も空の<p>を置く --}}
-            id="task-due-date-{{ $task->id }}"
-            class="text-sm {{ $dueDateClass }}"
-        >
-            @if ($dueDateText)
-                期限：{{ $dueDateText }}
-            @endif
-        </p>
+        <div class="mt-1 flex items-center">
+            <p {{-- JS側でidで探せるよう、due_dateがない場合も空の<p>を置く --}}
+                id="task-due-date-{{ $task->id }}"
+                class="text-sm {{ $dueDateClass }} {{ $task->due_date ? 'mr-3' : null }}"
+            >
+                @if ($dueDateText)
+                    期限：{{ $dueDateText }}
+                @endif
+            </p>
 
-        <p 
-            id="task-memo-{{ $task->id }}"
-            class="mt-1 text-sm text-gray-500"
-        >
-            @if ($task->memo)
-                メモ：{{ Str::limit($task->memo, 30) }}
-            @endif
-        </p>
+            <p 
+                id="task-memo-{{ $task->id }}"
+                class="text-sm text-gray-500"
+            >
+                @if ($task->memo)
+                    メモ：{{ Str::limit($task->memo, 30) }}
+                @endif
+            </p>
+        </div>
     </div>
 
     <div class="flex gap-2">
