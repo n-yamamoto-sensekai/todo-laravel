@@ -14,7 +14,7 @@ class TaskController extends Controller
         // フィルター機能
         $filter = $request->query("filter", "all");  // URLにfilterがない場合allを使う
 
-        $query = Task::query(); // Taskテーブルからデータを取得する準備をする
+        $query = Task::with('taskGroup'); // Taskテーブルからデータを取得する準備をする（N+1問題対策に紐づくtaskGroupを一緒に取得）
 
         if ($filter === 'active') {
             $query->where('is_done', false);  // 条件で絞り込む

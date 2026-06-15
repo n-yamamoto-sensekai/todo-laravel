@@ -17,7 +17,7 @@ class TaskGroupController extends Controller
     {
         // フィルター機能
         $filter = $request->query("filter", "all");
-        $query = $taskGroup->tasks();
+        $query = $taskGroup->tasks()->with('taskGroup');
 
         if ($filter === 'active') {
             $query->where('is_done', false);
