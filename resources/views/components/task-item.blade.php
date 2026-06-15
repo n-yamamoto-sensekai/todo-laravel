@@ -38,15 +38,19 @@
             data-due-date="{{ $task->due_date?->format('Y-m-d') }}"
             data-memo="{{ $task->memo }}"
             data-is-done="{{ $task->is_done ? 1 : 0 }}"
+            data-task-group-id="{{ $task->task_group_id }}"
         >
             {{ $task->title }}
         </button>
 
-        @if ($task->taskGroup)
-            <p class="text-sm text-gray-500">
+        <p
+            id="task-group-name-{{ $task->id }}"
+            class="text-sm text-gray-500"
+        >
+            @if ($task->taskGroup)
                 グループ：{{ $task->taskGroup->name }}
-            </p>
-        @endif
+            @endif
+        </p>
 
         <div class="mt-1 flex items-center gap-3">
             <span

@@ -12,10 +12,11 @@ function clearTaskModalErrors() {
     $('#modal-task-title-error').text('');
 }
 
-function setTaskModalValues(title, dueDate, memo) {
+function setTaskModalValues(title, dueDate, memo, taskGroupId) {
     $('#modal-task-title').val(title);
     $('#modal-task-due-date').val(dueDate);
     $('#modal-task-memo').val(memo);
+    $('#modal-task-group-id').val(taskGroupId || '');
 }
 
 function setTaskFormActions(id) {
@@ -102,10 +103,12 @@ function updateDueDateClass($taskDueDate, dueDate, isDone) {
     }
 }
 
+// Ajax更新時 一覧表示のタスク更新
 function updateTaskItem(task) {
     const $taskTitle = $('#task-title-' + task.id);
     const $taskDueDate = $('#task-due-date-' + task.id);
     const $taskMemo = $('#task-memo-' + task.id);
+    const $taskGroupName = $('#task-group-name-' + task.id);
 
     $taskTitle.text(task.title);
 
@@ -123,15 +126,23 @@ function updateTaskItem(task) {
         $taskMemo.text('');
     }
 
+    if (task.task_group_name) {
+        $taskGroupName.text('グループ：' + task.task_group_name);
+    } else {
+        $taskGroupName.text('');
+    }
+
     // jQuery内のキャッシュを更新
     $taskTitle.data('title', task.title);
     $taskTitle.data('due-date', task.due_date);
     $taskTitle.data('memo', task.memo);
+    $taskTitle.data('task-group-id', task.task_group_id);
 
     // HTML上の見た目を更新
     $taskTitle.attr('data-title', task.title);
     $taskTitle.attr('data-due-date', task.due_date);
     $taskTitle.attr('data-memo', task.memo);
+    $taskTitle.attr('task-group-id', task.task_group_id);
 }
 
 function updateTaskDoneStatus(task) {
@@ -175,13 +186,14 @@ $(function () {
     //  モーダル表示とタスク情報の取得
     $('.js-open-task-model').on('click', function () {
         
-        const id = $(this).data('id')
-        const title = $(this).data('title')
-        const dueDate = $(this).data('due-date')
-        const memo = $(this).data('memo')
+        const id = $(this).data('id');
+        const title = $(this).data('title');
+        const dueDate = $(this).data('due-date');
+        const memo = $(this).data('memo');
+        const taskGroupId = $(this).data('task-group-id');
 
         clearTaskModalErrors();  // モーダル内のエラーを消去
-        setTaskModalValues(title, dueDate, memo);  // モーダルの中身にタスクの値をセット
+        setTaskModalValues(title, dueDate, memo, taskGroupId);  // モーダルの中身にタスクの値をセット
         setTaskFormActions(id);   // フォームの送り先をセット
         
         openTaskModal();

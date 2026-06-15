@@ -35,7 +35,9 @@ class TaskGroupController extends Controller
             ->latest()
             ->get();
 
-        return view('task-groups.show', compact('taskGroup', 'tasks', 'filter'));
+        $taskGroups = TaskGroup::orderBy('name')->get();
+
+        return view('task-groups.show', compact('taskGroup', 'tasks', 'filter', 'taskGroups'));
     }
 
     public function store(Request $request)

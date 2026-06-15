@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use App\Models\TaskGroup;
 
 class TaskController extends Controller
 {
@@ -32,7 +33,10 @@ class TaskController extends Controller
             ->latest()
             ->get();
 
-        return view("tasks.index", compact("tasks", "filter"));
+        // モーダルのグループ選択肢用
+        $taskGroups = TaskGroup::orderBy('name')->get();
+
+        return view("tasks.index", compact("tasks", "filter", "taskGroups"));
     }
 
     // 追加
@@ -68,7 +72,10 @@ class TaskController extends Controller
             'title'=> $request->input('title'),
             'due_date' => $request->input('due_date'),
             'memo' => $request->input('memo'),
+            'task_group_id' => $request->input('task_group_id'),
         ]);
+
+        $task->load('taskGroup');  // 最新のリレーションを読み込み
 
         // Ajaxリクエストの場合jsonでレスポンスを返す
         if ($request->expectsJson()) {
@@ -80,6 +87,8 @@ class TaskController extends Controller
                     'is_done' => $task->is_done,
                     'due_date' => $task->due_date?->format('Y-m-d'),
                     'memo' => $task->memo,
+                    'task_group_id' => $task->task_group_id,
+                    'task_group_name' => $task->taskGroup?->name,
                 ],
             ]);
         }

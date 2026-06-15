@@ -69,5 +69,5 @@
     </form>
     <x-input-error name="title" />
 
-    <x-task-modal />
+    <x-task-modal :task-groups="$taskGroups" />
 @endsection
