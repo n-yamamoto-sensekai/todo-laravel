@@ -43,26 +43,27 @@
             {{ $task->title }}
         </button>
 
-        <p
-            id="task-group-name-{{ $task->id }}"
-            class="text-sm text-gray-500"
-        >
-            @if ($task->taskGroup)
-                グループ：{{ $task->taskGroup->name }}
-            @endif
-        </p>
-
-        <div class="mt-1 flex items-center gap-3">
+        <div class="mt-1 flex">
+            <p
+                id="task-group-name-{{ $task->id }}"
+                class="text-sm text-gray-500 {{ $task->taskGroup ? 'mr-3' : null }}"
+            >
+                @if ($task->taskGroup)
+                    グループ：{{ $task->taskGroup->name }}
+                @endif
+            </p>
             <span
                 id="task-status-label-{{ $task->id }}"
-                class="text-sm {{ $task->is_done ? 'text-green-600' : 'text-gray-500' }}"
+                class="rounded-2xl px-1.5 text-sm {{ $task->is_done ? 'text-green-600 bg-green-100' : 'text-gray-500 bg-gray-200' }}"
             >
                 {{ $task->is_done ? '完了' : '未完了' }}
             </span>
+        </div>
 
+        <div class="mt-1 flex items-center">
             <p {{-- JS側でidで探せるよう、due_dateがない場合も空の<p>を置く --}}
                 id="task-due-date-{{ $task->id }}"
-                class="text-sm {{ $dueDateClass }}"
+                class="text-sm {{ $dueDateClass }} {{ $task->due_date ? 'mr-3' : null }}"
             >
                 @if ($dueDateText)
                     期限：{{ $dueDateText }}
