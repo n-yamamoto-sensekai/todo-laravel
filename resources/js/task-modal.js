@@ -1,17 +1,24 @@
 import $ from 'jquery';
 
+// ==============================
+// モーダル操作
+// ==============================
+// モーダルを開く
 function openTaskModal() {
     $('#task-modal').removeClass('hidden');
 }
 
+// モーダルを閉じる
 function closeTaskModal() {
     $('#task-modal').addClass('hidden');
 }
 
+// モーダルを閉じるときにエラーを削除する
 function clearTaskModalErrors() {
     $('#modal-task-title-error').text('');
 }
 
+// モーダルに値をセットする
 function setTaskModalValues(title, dueDate, memo, taskGroupId) {
     $('#modal-task-title').val(title);
     $('#modal-task-due-date').val(dueDate);
@@ -19,34 +26,15 @@ function setTaskModalValues(title, dueDate, memo, taskGroupId) {
     $('#modal-task-group-id').val(taskGroupId || '');
 }
 
+// モーダルのフォームのアクションをセットする
 function setTaskFormActions(id) {
     $('#modal-task-form').attr('action', '/tasks/' + id);
     $('#modal-task-delete-form').attr('action', '/tasks/' + id);
 }
 
-function submitTaskDeleteForm() {
-    if (!confirm('このタスクを削除しますか？')) {
-        return;
-    }    
-    const $deleteForm = $('#modal-task-delete-form');
-
-    $.ajax({
-        url: $deleteForm.attr('action'),
-        method: 'DELETE',
-        dataType: 'json',
-        success: function (response) {
-            console.log(response);
-            removeTaskItem(response.task_id);   // タスク一覧からタスクを削除
-            closeTaskModal();
-        },
-        error: function (xhr) {
-            console.log('status:', xhr.status);
-            console.log('responseJSON:', xhr.responseJSON);
-            console.log('resoponseTEXT:', xhr.responseTEXT);
-        }
-    });
-}
-
+// ==============================
+// 表示整形用
+// ==============================
 // 最大文字数で省略
 function truncateText(text, maxLength) {
     if (!text) {
@@ -103,8 +91,16 @@ function updateDueDateClass($taskDueDate, dueDate, isDone) {
     }
 }
 
+// ==============================
+// 一覧表示更新
+// ==============================
 // Ajax更新時 一覧表示のタスク更新
 function updateTaskItem(task) {
+    if (!shouldKeepTaskInCurrentList(task)) {
+        removeTaskItem(task.id);
+        return;
+    }
+
     const $taskTitle = $('#task-title-' + task.id);
     const $taskDueDate = $('#task-due-date-' + task.id);
     const $taskMemo = $('#task-memo-' + task.id);
@@ -142,10 +138,16 @@ function updateTaskItem(task) {
     $taskTitle.attr('data-title', task.title);
     $taskTitle.attr('data-due-date', task.due_date);
     $taskTitle.attr('data-memo', task.memo);
-    $taskTitle.attr('task-group-id', task.task_group_id);
+    $taskTitle.attr('data-task-group-id', task.task_group_id);
 }
 
+// Ajax 完了状態の更新
 function updateTaskDoneStatus(task) {
+    if (!shouldKeepTaskInCurrentList(task)) {
+        removeTaskItem(task.id);
+        return;
+    }
+
     const $taskTitle = $('#task-title-' + task.id);
     const $toggleButton = $('#task-toggle-button-' + task.id);
     const $statusLabel = $('#task-status-label-' + task.id);
@@ -177,14 +179,68 @@ function updateTaskDoneStatus(task) {
     updateDueDateClass($taskDueDate, task.due_date, task.is_done);
 }
 
+// タスクを一覧から消去
 function removeTaskItem(taskId) {
     $('#task-item-' + taskId).remove();
 }
 
+// タスクを一覧に残すかどうか判定
+function shouldKeepTaskInCurrentList(task) {
+    const currentFilter = $('#task-list').data('current-filter') || 'all';
+    const currentTaskGroupId = $('#task-list').data('current-task-group-id');
+
+    // グループ表示で、グループIDが変更されたとき
+    if (currentTaskGroupId && String(task.task_group_id || '') !== String(currentTaskGroupId)) {  // data-*からとった値とJSONの値のデータ型をStringに揃える
+        return false;
+    }
+
+    // 未完了フィルター表示で、タスクが完了したとき
+    if (currentFilter === 'active' && task.is_done) {
+        return false;
+    }
+
+    // 完了フィルター表示で、タスクが未完了に戻ったとき
+    if (currentFilter === 'completed' && !task.is_done) {
+        return false;
+    }
+
+    return true;
+}
+
+// ==============================
+// Ajax送信
+// ==============================
+// モーダル内でタスクを削除する
+function submitTaskDeleteForm() {
+    if (!confirm('このタスクを削除しますか？')) {
+        return;
+    }    
+    const $deleteForm = $('#modal-task-delete-form');
+
+    $.ajax({
+        url: $deleteForm.attr('action'),
+        method: 'DELETE',
+        dataType: 'json',
+        success: function (response) {
+            console.log(response);
+            removeTaskItem(response.task_id);   // タスク一覧からタスクを削除
+            closeTaskModal();
+        },
+        error: function (xhr) {
+            console.log('status:', xhr.status);
+            console.log('responseJSON:', xhr.responseJSON);
+            console.log('responseText:', xhr.responseText);
+        }
+    });
+}
+
+// ==============================
+// イベント登録
+// ==============================
 $(function () {
     
     //  モーダル表示とタスク情報の取得
-    $('.js-open-task-model').on('click', function () {
+    $('.js-open-task-modal').on('click', function () {
         
         const id = $(this).data('id');
         const title = $(this).data('title');
@@ -245,13 +301,13 @@ $(function () {
             error: function (xhr) {
                 console.log('status:', xhr.status);
                 console.log('responseJSON:', xhr.responseJSON);
-                console.log('resoponseTEXT:', xhr.responseTEXT);
+                console.log('responseText:', xhr.responseText);
             }
         });
     });
 
     // モーダル内削除
-    $('#js-delete-task-form-modal').on('click', function () {
+    $('#js-delete-task-from-modal').on('click', function () {
         submitTaskDeleteForm();
     });
 
@@ -269,5 +325,4 @@ $(function () {
             closeTaskModal();
         }
     });
-
 });

@@ -32,7 +32,7 @@
         <button
             type="button"
             id="task-title-{{ $task->id }}"
-            class="block js-open-task-model text-left {{ $task->is_done ? 'line-through text-gray-400' : '' }}"
+            class="block js-open-task-modal text-left {{ $task->is_done ? 'line-through text-gray-400' : '' }}"
             data-id="{{ $task->id }}"
             data-title="{{ $task->title }}"
             data-due-date="{{ $task->due_date?->format('Y-m-d') }}"

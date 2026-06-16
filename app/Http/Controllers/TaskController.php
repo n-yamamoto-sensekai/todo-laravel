@@ -113,6 +113,8 @@ class TaskController extends Controller
                     'is_done' => $task->is_done,
                     'due_date' => $task->due_date?->format('Y-m-d'),
                     'memo' => $task->memo,
+                    'task_group_id' => $task->task_group_id,
+                    'task_group_name' => $task->taskGroup?->name,
                 ],
             ]);
         }

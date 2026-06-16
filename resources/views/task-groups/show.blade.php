@@ -36,7 +36,12 @@
         </x-filter-link>
     </div>
 
-    <ul class="space-y-3">
+    <ul
+        id="task-list"
+        class="space-y-2"
+        data-current-filter="{{ $filter }}"
+        data-current-task-group-id="{{ $taskGroup->id }}"
+    >
         @forelse ($tasks as $task)
             <x-task-item :task="$task" />
         @empty
