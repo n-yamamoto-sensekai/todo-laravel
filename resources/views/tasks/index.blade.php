@@ -63,7 +63,12 @@
     </div>
 
     {{-- タスク一覧  --}}
-    <ul class="space-y-2">
+    <ul
+        id="task-list"
+        class="space-y-2"
+        data-current-filter="{{ $filter }}"
+        data-current-task-group-id=""
+    >
     @forelse ($tasks as $task)
         
         {{-- タスク内容 --}}

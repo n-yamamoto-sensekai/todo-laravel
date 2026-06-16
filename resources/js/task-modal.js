@@ -96,6 +96,11 @@ function updateDueDateClass($taskDueDate, dueDate, isDone) {
 // ==============================
 // Ajax更新時 一覧表示のタスク更新
 function updateTaskItem(task) {
+    if (!shouldKeepTaskInCurrentList(task)) {
+        removeTaskItem(task.id);
+        return;
+    }
+
     const $taskTitle = $('#task-title-' + task.id);
     const $taskDueDate = $('#task-due-date-' + task.id);
     const $taskMemo = $('#task-memo-' + task.id);
@@ -138,6 +143,11 @@ function updateTaskItem(task) {
 
 // Ajax 完了状態の更新
 function updateTaskDoneStatus(task) {
+    if (!shouldKeepTaskInCurrentList(task)) {
+        removeTaskItem(task.id);
+        return;
+    }
+
     const $taskTitle = $('#task-title-' + task.id);
     const $toggleButton = $('#task-toggle-button-' + task.id);
     const $statusLabel = $('#task-status-label-' + task.id);
@@ -172,6 +182,29 @@ function updateTaskDoneStatus(task) {
 // タスクを一覧から消去
 function removeTaskItem(taskId) {
     $('#task-item-' + taskId).remove();
+}
+
+// タスクを一覧に残すかどうか判定
+function shouldKeepTaskInCurrentList(task) {
+    const currentFilter = $('#task-list').data('current-filter') || 'all';
+    const currentTaskGroupId = $('#task-list').data('current-task-group-id');
+
+    // グループ表示で、グループIDが変更されたとき
+    if (currentTaskGroupId && String(task.task_group_id || '') !== String(currentTaskGroupId)) {  // data-*からとった値とJSONの値のデータ型をStringに揃える
+        return false;
+    }
+
+    // 未完了フィルター表示で、タスクが完了したとき
+    if (currentFilter === 'active' && task.is_done) {
+        return false;
+    }
+
+    // 完了フィルター表示で、タスクが未完了に戻ったとき
+    if (currentFilter === 'completed' && !task.is_done) {
+        return false;
+    }
+
+    return true;
 }
 
 // ==============================
