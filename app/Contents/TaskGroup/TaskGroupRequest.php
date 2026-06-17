@@ -1,7 +1,7 @@
 <?php
+namespace App\Contents\TaskGroup;
 
-namespace App\Http\Requests;
-
+use App\Contents\BaseRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
