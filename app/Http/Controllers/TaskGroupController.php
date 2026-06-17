@@ -6,14 +6,19 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TaskGroupRequest;
 use App\Models\TaskGroup;
 use App\Contents\TaskGroup\TaskGroupShowService;
+use App\Contents\TaskGroup\TaskGroupRegisterService;
 
 class TaskGroupController extends Controller
 {
     private TaskGroupShowService $showService;
+    private TaskGroupRegisterService $registerService;
 
-    public function __construct(TaskGroupShowService $showService)
-    {
+    public function __construct(
+        TaskGroupShowService $showService,
+        TaskGroupRegisterService $registerService
+    ){
         $this->showService = $showService;
+        $this->registerService = $registerService;
     }
 
     public function index()
@@ -30,10 +35,7 @@ class TaskGroupController extends Controller
 
     public function store(TaskGroupRequest $request)
     {
-        TaskGroup::create([
-            'name'=> $request->input('name'),
-        ]);
-
+        $this->registerService->execute($request);
         return redirect()->route('task-groups.index')->with('message','タスクグループを追加しました');
     }
 
