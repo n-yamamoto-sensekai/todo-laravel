@@ -4,7 +4,7 @@ namespace App\Contents\TaskGroup;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\TaskGroupRequest;
+use App\Contents\TaskGroup\TaskGroupRequest;
 use App\Models\TaskGroup;
 use App\Contents\TaskGroup\TaskGroupShowService;
 use App\Contents\TaskGroup\TaskGroupRegisterService;
