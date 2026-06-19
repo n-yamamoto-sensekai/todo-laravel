@@ -8,18 +8,22 @@ use App\Contents\TaskGroup\TaskGroupRequest;
 use App\Models\TaskGroup;
 use App\Contents\TaskGroup\TaskGroupShowService;
 use App\Contents\TaskGroup\TaskGroupRegisterService;
+use App\Contents\TaskGroup\TaskGroupUpdateService;
 
 class TaskGroupController extends Controller
 {
     private TaskGroupShowService $showService;
     private TaskGroupRegisterService $registerService;
+    private TaskGroupUpdateService $updateService;
 
     public function __construct(
         TaskGroupShowService $showService,
-        TaskGroupRegisterService $registerService
+        TaskGroupRegisterService $registerService,
+        TaskGroupUpdateService $updateService,
     ){
         $this->showService = $showService;
         $this->registerService = $registerService;
+        $this->updateService = $updateService;
     }
 
     public function index()
@@ -47,10 +51,7 @@ class TaskGroupController extends Controller
 
     public function update(TaskGroupRequest $request, TaskGroup $taskGroup)
     {
-        $taskGroup->update([
-            'name'=> $request->input('name'),
-        ]);
-
+        $this->updateService->execute($taskGroup, $request);
         return redirect()->route('task-groups.index')->with('message','グループ名を更新しました');
     }
 
