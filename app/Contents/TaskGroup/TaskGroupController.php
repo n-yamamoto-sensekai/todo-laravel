@@ -9,21 +9,25 @@ use App\Models\TaskGroup;
 use App\Contents\TaskGroup\TaskGroupShowService;
 use App\Contents\TaskGroup\TaskGroupRegisterService;
 use App\Contents\TaskGroup\TaskGroupUpdateService;
+use App\Contents\TaskGroup\TaskGroupDestroyService;
 
 class TaskGroupController extends Controller
 {
     private TaskGroupShowService $showService;
     private TaskGroupRegisterService $registerService;
     private TaskGroupUpdateService $updateService;
+    private TaskGroupDestroyService $destroyService;
 
     public function __construct(
         TaskGroupShowService $showService,
         TaskGroupRegisterService $registerService,
         TaskGroupUpdateService $updateService,
+        TaskGroupDestroyService $destroyService,
     ){
         $this->showService = $showService;
         $this->registerService = $registerService;
         $this->updateService = $updateService;
+        $this->destroyService = $destroyService;
     }
 
     public function index()
@@ -57,7 +61,7 @@ class TaskGroupController extends Controller
 
     public function destroy(TaskGroup $taskGroup)
     {
-        $taskGroup->delete();
+        $this->destroyService->execute($taskGroup);
         return redirect()->route('task-groups.index')->with('message','タスクグループを削除しました');
     }
 }
