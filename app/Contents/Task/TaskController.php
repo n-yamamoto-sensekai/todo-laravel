@@ -8,11 +8,14 @@ use App\Models\Task;
 class TaskController extends Controller
 {
     private TaskIndexRetrieveService $indexRetrieveService;
+    private TaskRegisterService $registerService;
 
     public function __construct(
-        TaskIndexRetrieveService $indexRetrieveService
+        TaskIndexRetrieveService $indexRetrieveService,
+        TaskRegisterService $registerService
     ) {
         $this->indexRetrieveService = $indexRetrieveService;
+        $this->registerService = $registerService;
     }
 
     // 一覧表示
@@ -25,11 +28,7 @@ class TaskController extends Controller
     // 追加
     public function store(TaskRequest $request) // TaskRequestのrules()を使って入力チェックしてくれる
     {
-        Task::create([
-            // params[:title]的な感じ
-            'title' => $request->input('title'),
-            'task_group_id' => $request->input('task_group_id'),
-        ]);
+        $this->registerService->execute($request);
 
         if ($request->filled('task_group_id')) {
             return redirect()
