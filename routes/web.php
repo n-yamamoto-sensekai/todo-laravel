@@ -2,8 +2,8 @@
 
 use Illuminate\Console\View\Components\Task;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TaskGroupController;
-use App\Http\Controllers\TaskController;
+use App\Contents\TaskGroup\TaskGroupController;
+use App\Contents\Task\TaskController;
 
 Route::get('/', function () {
     return redirect()->route('task-groups.index');

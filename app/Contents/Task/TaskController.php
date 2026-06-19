@@ -1,9 +1,9 @@
 <?php
+namespace App\Contents\Task;
 
-namespace App\Http\Controllers;
-
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\TaskRequest;
+use App\Contents\Task\TaskRequest;
 use App\Models\Task;
 use App\Models\TaskGroup;
 
