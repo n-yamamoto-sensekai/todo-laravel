@@ -13,7 +13,7 @@ class TaskGroupShowService
         $filter = $request->query("filter", "all");
 
         // タスクをフィルターで絞り込み
-        $query = $taskGroup->tasks()->with('taskGroup');
+        $query = $taskGroup->tasks();  // HasMany リレーションオブジェクト（内部にEloquent Builderを持つ）
 
         if ($filter === 'active') {
             $query->where('is_done', false);
@@ -29,7 +29,10 @@ class TaskGroupShowService
             ->orderByRaw('due_date IS NULL')
             ->orderBy('due_date')
             ->latest()
-            ->get();
+            ->get()  // ここでSQL発行
+            ->each(fn($task) => $task->setRelation('taskGroup', $taskGroup));
+            // setRelation(string $relation, mixed $value)：指定したリレーションをモデルにセット（DB保存ではない）
+            // 実行中のTaskモデルに、読み込み済みリレーションとして $taskGroup を持たせる
 
         // タスクグループを取得（モーダル用）
         $taskGroups = TaskGroup::orderBy('name')->get();
