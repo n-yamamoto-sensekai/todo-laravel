@@ -1,6 +1,7 @@
 <?php
 namespace App\Contents\Task;
 
+use App\Contents\TaskGroup\TaskGroupUpdateService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
@@ -9,13 +10,16 @@ class TaskController extends Controller
 {
     private TaskIndexRetrieveService $indexRetrieveService;
     private TaskRegisterService $registerService;
+    private TaskUpdateService $updateService;
 
     public function __construct(
         TaskIndexRetrieveService $indexRetrieveService,
-        TaskRegisterService $registerService
+        TaskRegisterService $registerService,
+        TaskUpdateService $updateService
     ) {
         $this->indexRetrieveService = $indexRetrieveService;
         $this->registerService = $registerService;
+        $this->updateService = $updateService;
     }
 
     // 一覧表示
@@ -50,14 +54,7 @@ class TaskController extends Controller
     // 更新
     public function update(TaskRequest $request, Task $task)
     {
-        $task->update([
-            'title'=> $request->input('title'),
-            'due_date' => $request->input('due_date'),
-            'memo' => $request->input('memo'),
-            'task_group_id' => $request->input('task_group_id'),
-        ]);
-
-        $task->load('taskGroup');  // 最新のリレーションを読み込み
+        $task = $this->updateService->execute($task, $request);
 
         // Ajaxリクエストの場合jsonでレスポンスを返す
         if ($request->expectsJson()) {
