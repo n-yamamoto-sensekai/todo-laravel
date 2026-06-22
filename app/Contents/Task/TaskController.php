@@ -11,17 +11,20 @@ class TaskController extends Controller
     private TaskRegisterService $registerService;
     private TaskUpdateService $updateService;
     private TaskToggleService $toggleService;
+    private TaskDeleteService $deleteService;
 
     public function __construct(
         TaskIndexRetrieveService $indexRetrieveService,
         TaskRegisterService $registerService,
         TaskUpdateService $updateService,
-        TaskToggleService $toggleService
+        TaskToggleService $toggleService,
+        TaskDeleteService $deleteService
     ) {
         $this->indexRetrieveService = $indexRetrieveService;
         $this->registerService = $registerService;
         $this->updateService = $updateService;
         $this->toggleService = $toggleService;
+        $this->deleteService = $deleteService;
     }
 
     // 一覧表示
@@ -119,8 +122,7 @@ class TaskController extends Controller
     // 削除
     public function destroy(Request $request, Task $task)  // Route Model Binding
     {
-        $taskId = $task->id;
-        $task->delete();
+        $taskId = $this->deleteService->execute($task);
 
         // Ajaxリクエストの場合jsonでレスポンスを返す
         if ($request->expectsJson()) {
