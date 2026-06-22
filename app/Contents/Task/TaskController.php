@@ -11,6 +11,7 @@ class TaskController extends Controller
     private TaskRegisterService $registerService;
     private TaskUpdateService $updateService;
     private TaskToggleService $toggleService;
+    private TaskUpdateAllStatusService $updateAllStatusService;
     private TaskDeleteService $deleteService;
 
     public function __construct(
@@ -18,12 +19,14 @@ class TaskController extends Controller
         TaskRegisterService $registerService,
         TaskUpdateService $updateService,
         TaskToggleService $toggleService,
+        TaskUpdateAllStatusService $updateAllStatusService,
         TaskDeleteService $deleteService
     ) {
         $this->indexRetrieveService = $indexRetrieveService;
         $this->registerService = $registerService;
         $this->updateService = $updateService;
         $this->toggleService = $toggleService;
+        $this->updateAllStatusService = $updateAllStatusService;
         $this->deleteService = $deleteService;
     }
 
@@ -102,20 +105,14 @@ class TaskController extends Controller
     // 一括完了
     public function markAllDone()
     {
-        Task::query()->update([
-            'is_done' => true,
-        ]);
-        
+        $this->updateAllStatusService->execute(true);
         return redirect()->route('tasks.index')->with('message','すべてのタスクを完了にしました');
     }
 
-	// 一括未完了
+    // 一括未完了
     public function markAllUndone()
     {
-        Task::query()->update([
-            'is_done' => false,
-        ]);
-        
+        $this->updateAllStatusService->execute(false);
         return redirect()->route('tasks.index')->with('message','すべてのタスクを未完了にしました');
     }
 
