@@ -13,6 +13,7 @@ class TaskController extends Controller
     private TaskToggleService $toggleService;
     private TaskUpdateAllStatusService $updateAllStatusService;
     private TaskDeleteService $deleteService;
+    private TaskDeleteCompletedService $deleteCompletedService;
 
     public function __construct(
         TaskIndexRetrieveService $indexRetrieveService,
@@ -20,7 +21,8 @@ class TaskController extends Controller
         TaskUpdateService $updateService,
         TaskToggleService $toggleService,
         TaskUpdateAllStatusService $updateAllStatusService,
-        TaskDeleteService $deleteService
+        TaskDeleteService $deleteService,
+        TaskDeleteCompletedService $deleteCompletedService
     ) {
         $this->indexRetrieveService = $indexRetrieveService;
         $this->registerService = $registerService;
@@ -28,6 +30,7 @@ class TaskController extends Controller
         $this->toggleService = $toggleService;
         $this->updateAllStatusService = $updateAllStatusService;
         $this->deleteService = $deleteService;
+        $this->deleteCompletedService = $deleteCompletedService;
     }
 
     // 一覧表示
@@ -132,14 +135,10 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('message', 'タスクを削除しました');
     }
 
-	// 完了タスクの一括削除
-	public function destroyCompleted()
-	{
-		Task::query()
-			->where('is_done', true)
-			->delete();
-
-		return redirect()->route('tasks.index')->with('message','完了済みタスクを削除しました。');
-	}
-
+    // 完了タスクの一括削除
+    public function destroyCompleted()
+    {
+        $this->deleteCompletedService->execute();
+        return redirect()->route('tasks.index')->with('message','完了済みタスクを削除しました。');
+    }
 }
