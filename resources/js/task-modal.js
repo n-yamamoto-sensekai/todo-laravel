@@ -158,8 +158,8 @@ function updateTaskDoneStatus(task) {
         $toggleButton.text('未完了に戻す');
         $statusLabel
             .text('完了')
-            .removeClass('text-gray-500')
-            .addClass('text-green-600');
+            .removeClass('text-gray-500 bg-gray-200')
+            .addClass('text-green-600 bg-green-100');
 
         $taskTitle.data('is-done', 1);
         $taskTitle.attr('data-is-done', 1);
@@ -169,8 +169,8 @@ function updateTaskDoneStatus(task) {
         $toggleButton.text('完了');
         $statusLabel
             .text('未完了')
-            .removeClass('text-green-600')
-            .addClass('text-gray-500');
+            .removeClass('text-green-600 bg-green-100')
+            .addClass('text-gray-500 bg-gray-200');
 
         $taskTitle.data('is-done', 0);
         $taskTitle.attr('data-is-done', 0);
