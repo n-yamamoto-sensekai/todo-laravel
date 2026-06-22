@@ -1,7 +1,6 @@
 <?php
 namespace App\Contents\Task;
 
-use App\Contents\TaskGroup\TaskGroupUpdateService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
@@ -11,15 +10,18 @@ class TaskController extends Controller
     private TaskIndexRetrieveService $indexRetrieveService;
     private TaskRegisterService $registerService;
     private TaskUpdateService $updateService;
+    private TaskToggleService $toggleService;
 
     public function __construct(
         TaskIndexRetrieveService $indexRetrieveService,
         TaskRegisterService $registerService,
-        TaskUpdateService $updateService
+        TaskUpdateService $updateService,
+        TaskToggleService $toggleService
     ) {
         $this->indexRetrieveService = $indexRetrieveService;
         $this->registerService = $registerService;
         $this->updateService = $updateService;
+        $this->toggleService = $toggleService;
     }
 
     // 一覧表示
@@ -78,9 +80,7 @@ class TaskController extends Controller
     // 完了フラグの切り替え
     public function toggle(Request $request, Task $task)
     {
-        $task->update([
-            'is_done' => ! $task->is_done,  // !：真偽値を逆にする演算子
-        ]);
+        $task = $this->toggleService->execute($task);
 
         // Ajaxリクエストの場合jsonでレスポンスを返す
         if ($request->expectsJson()) {
@@ -88,12 +88,7 @@ class TaskController extends Controller
                 'message' => 'タスクの状態を更新しました',
                 'task' => [
                     'id' => $task->id,
-                    'title' => $task->title,
                     'is_done' => $task->is_done,
-                    'due_date' => $task->due_date?->format('Y-m-d'),
-                    'memo' => $task->memo,
-                    'task_group_id' => $task->task_group_id,
-                    'task_group_name' => $task->taskGroup?->name,
                 ],
             ]);
         }
