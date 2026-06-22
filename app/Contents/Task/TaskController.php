@@ -3,50 +3,47 @@ namespace App\Contents\Task;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Contents\Task\TaskRequest;
 use App\Models\Task;
-use App\Models\TaskGroup;
 
 class TaskController extends Controller
 {
+    private TaskIndexRetrieveService $indexRetrieveService;
+    private TaskRegisterService $registerService;
+    private TaskUpdateService $updateService;
+    private TaskToggleService $toggleService;
+    private TaskUpdateAllStatusService $updateAllStatusService;
+    private TaskDeleteService $deleteService;
+    private TaskDeleteCompletedService $deleteCompletedService;
+
+    public function __construct(
+        TaskIndexRetrieveService $indexRetrieveService,
+        TaskRegisterService $registerService,
+        TaskUpdateService $updateService,
+        TaskToggleService $toggleService,
+        TaskUpdateAllStatusService $updateAllStatusService,
+        TaskDeleteService $deleteService,
+        TaskDeleteCompletedService $deleteCompletedService
+    ) {
+        $this->indexRetrieveService = $indexRetrieveService;
+        $this->registerService = $registerService;
+        $this->updateService = $updateService;
+        $this->toggleService = $toggleService;
+        $this->updateAllStatusService = $updateAllStatusService;
+        $this->deleteService = $deleteService;
+        $this->deleteCompletedService = $deleteCompletedService;
+    }
+
     // 一覧表示
     public function index(Request $request)
     {
-        // フィルター機能
-        $filter = $request->query("filter", "all");  // URLにfilterがない場合allを使う
-
-        $query = Task::with('taskGroup'); // Taskテーブルからデータを取得する準備をする（N+1問題対策に紐づくtaskGroupを一緒に取得）
-
-        if ($filter === 'active') {
-            $query->where('is_done', false);  // 条件で絞り込む
-        }
-
-        if ($filter === 'completed') {
-            $query->where('is_done', true);
-        }
-
-        // 完了ステータス順 > 新規順 に並び替えて実際に取得
-        $tasks = $query
-            ->orderBy('is_done')
-            ->orderByRaw('due_date IS NULL') // 期限がない => 1(true), ある => 0(false)
-            ->orderBy('due_date')
-            ->latest()
-            ->get();
-
-        // モーダルのグループ選択肢用
-        $taskGroups = TaskGroup::orderBy('name')->get();
-
-        return view("tasks.index", compact("tasks", "filter", "taskGroups"));
+        $data = $this->indexRetrieveService->execute($request);
+        return view("tasks.index", $data);
     }
 
     // 追加
     public function store(TaskRequest $request) // TaskRequestのrules()を使って入力チェックしてくれる
     {
-        Task::create([
-            // params[:title]的な感じ
-            'title' => $request->input('title'),
-            'task_group_id' => $request->input('task_group_id'),
-        ]);
+        $this->registerService->execute($request);
 
         if ($request->filled('task_group_id')) {
             return redirect()
@@ -68,14 +65,7 @@ class TaskController extends Controller
     // 更新
     public function update(TaskRequest $request, Task $task)
     {
-        $task->update([
-            'title'=> $request->input('title'),
-            'due_date' => $request->input('due_date'),
-            'memo' => $request->input('memo'),
-            'task_group_id' => $request->input('task_group_id'),
-        ]);
-
-        $task->load('taskGroup');  // 最新のリレーションを読み込み
+        $task = $this->updateService->execute($task, $request);
 
         // Ajaxリクエストの場合jsonでレスポンスを返す
         if ($request->expectsJson()) {
@@ -99,9 +89,7 @@ class TaskController extends Controller
     // 完了フラグの切り替え
     public function toggle(Request $request, Task $task)
     {
-        $task->update([
-            'is_done' => ! $task->is_done,  // !：真偽値を逆にする演算子
-        ]);
+        $task = $this->toggleService->execute($task);
 
         // Ajaxリクエストの場合jsonでレスポンスを返す
         if ($request->expectsJson()) {
@@ -109,12 +97,7 @@ class TaskController extends Controller
                 'message' => 'タスクの状態を更新しました',
                 'task' => [
                     'id' => $task->id,
-                    'title' => $task->title,
                     'is_done' => $task->is_done,
-                    'due_date' => $task->due_date?->format('Y-m-d'),
-                    'memo' => $task->memo,
-                    'task_group_id' => $task->task_group_id,
-                    'task_group_name' => $task->taskGroup?->name,
                 ],
             ]);
         }
@@ -125,28 +108,21 @@ class TaskController extends Controller
     // 一括完了
     public function markAllDone()
     {
-        Task::query()->update([
-            'is_done' => true,
-        ]);
-        
+        $this->updateAllStatusService->execute(true);
         return redirect()->route('tasks.index')->with('message','すべてのタスクを完了にしました');
     }
 
-	// 一括未完了
+    // 一括未完了
     public function markAllUndone()
     {
-        Task::query()->update([
-            'is_done' => false,
-        ]);
-        
+        $this->updateAllStatusService->execute(false);
         return redirect()->route('tasks.index')->with('message','すべてのタスクを未完了にしました');
     }
 
     // 削除
     public function destroy(Request $request, Task $task)  // Route Model Binding
     {
-        $taskId = $task->id;
-        $task->delete();
+        $taskId = $this->deleteService->execute($task);
 
         // Ajaxリクエストの場合jsonでレスポンスを返す
         if ($request->expectsJson()) {
@@ -159,14 +135,10 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('message', 'タスクを削除しました');
     }
 
-	// 完了タスクの一括削除
-	public function destroyCompleted()
-	{
-		Task::query()
-			->where('is_done', true)
-			->delete();
-
-		return redirect()->route('tasks.index')->with('message','完了済みタスクを削除しました。');
-	}
-
+    // 完了タスクの一括削除
+    public function destroyCompleted()
+    {
+        $this->deleteCompletedService->execute();
+        return redirect()->route('tasks.index')->with('message','完了済みタスクを削除しました。');
+    }
 }
