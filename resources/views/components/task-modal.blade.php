@@ -20,6 +20,9 @@
             <form id="modal-task-form" method="POST" class="space-y-4">
                 @csrf
                 @method('PUT')
+
+                {{-- 例外時メッセージ表示 --}}
+                <p id="modal-todo-exception-error" class="mt-2 text-sm text-red-600"></p>
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">

@@ -16,6 +16,7 @@ function closeTaskModal() {
 // モーダルを閉じるときにエラーを削除する
 function clearTaskModalErrors() {
     $('#modal-task-title-error').text('');
+    $('#modal-todo-exception-error').text('');
 }
 
 // モーダルに値をセットする
@@ -275,11 +276,23 @@ $(function () {
                 closeTaskModal(); // モーダルを閉じる
             },
             error: function (xhr) {
-                const errors = xhr.responseJSON.errors;
+                const response = xhr.responseJSON || {};
+                const errors = response.errors || {};
+                console.log(response);
 
+                // バリデーションエラーがあればそれを返す
                 if (errors.title) {
                     $('#modal-task-title-error').text(errors.title[0]);
+                    return
                 }
+
+                // TodoExceptionの場合メッセージを返す
+                if (response.message) {
+                    $('#modal-todo-exception-error').text(response.message);
+                    return;
+                }
+
+                $('#modal-todo-exception-error').text('タスクの更新に失敗しました。')
             }
         });
     });
