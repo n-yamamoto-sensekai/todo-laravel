@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             
             // ログ
             Log::warning('TODO業務例外が発生しました', [
+                'code' => $e->getErrorCode(),
                 'message' => $e->getMessage(),
                 'url' => $request->fullUrl(),
                 'method' => $request->method(),
@@ -32,9 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
             // JSONリクエストなら 422 JSONレスポンスを返す
             if ($request->expectsJson()) {
-                return response()->json([
-                    'message' => $e->getMessage(),
-                ], 422);
+                return response()->json($e->getErrorInfo(), 422);
             }
 
             // 通常リクエストなら前の画面に戻ってエラーを表示できるようにする）

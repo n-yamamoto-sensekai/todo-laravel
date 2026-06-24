@@ -13,7 +13,7 @@ function closeTaskModal() {
     $('#task-modal').addClass('hidden');
 }
 
-// モーダルを閉じるときにエラーを削除する
+// モーダル内のエラーを削除する
 function clearTaskModalErrors() {
     $('#modal-task-title-error').text('');
     $('#modal-todo-exception-error').text('');
@@ -278,21 +278,25 @@ $(function () {
             error: function (xhr) {
                 const response = xhr.responseJSON || {};
                 const errors = response.errors || {};
+                const error = response.error || {};
                 console.log(response);
+
+                // エラーをリセットする
+                clearTaskModalErrors();
 
                 // バリデーションエラーがあればそれを返す
                 if (errors.title) {
                     $('#modal-task-title-error').text(errors.title[0]);
-                    return
-                }
-
-                // TodoExceptionの場合メッセージを返す
-                if (response.message) {
-                    $('#modal-todo-exception-error').text(response.message);
                     return;
                 }
 
-                $('#modal-todo-exception-error').text('タスクの更新に失敗しました。')
+                // TodoExceptionの場合メッセージを返す
+                if (error.message) {
+                    $('#modal-todo-exception-error').text(error.message);
+                    return;
+                }
+
+                $('#modal-todo-exception-error').text('タスクの更新に失敗しました。');
             }
         });
     });
