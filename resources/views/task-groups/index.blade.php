@@ -3,6 +3,8 @@
 @section('content')
     <h1 class="text-2xl font-bold mb-6">タスクグループ一覧</h1>
 
+    <x-page-error name="todo" />
+
     <div class="mb-6">
         <a
             href="{{ route('tasks.index') }}"
@@ -56,7 +58,7 @@
                     <form 
                         action="{{ route('task-groups.destroy', $taskGroup) }}"
                         method="POST"
-                        onsubmit="return confirm('このグループを削除しますか?\n※ 紐づくタスクも削除されます');"
+                        onsubmit="return confirm('このグループを削除しますか?');"
                     >
                         @csrf
                         @method('DELETE')
