@@ -14,39 +14,63 @@ class TodoException extends Exception
     //---------------------------------------
     // Properties
     //---------------------------------------
-    // エラーコード
-    private string $errorCode;
+    // メッセージコード
+    private string $messageCode;
+    
+    // 付加情報
+    private string $additional;
 
     //---------------------------------------
     // Constructor
     //---------------------------------------
     public function __construct(
-        string $errorCode,
-        string $message,
+        string $messageCode,
+        string $additional = '',
         int $code = 0,
         ?Throwable $previous = null
     ) {
-        $this->errorCode = $errorCode;
+        $this->messageCode = $messageCode;
+        $this->additional = $additional;
 
         // 親クラスのConstructorコール
-        parent::__construct($message, $code, $previous);
+        parent::__construct($this->resolveMessage($messageCode), $code, $previous);
     }
 
     //---------------------------------------
     // Public Method
     //---------------------------------------
-    public function getErrorCode(): string
+    public function getMessageCode(): string
     {
-        return $this->errorCode;
+        return $this->messageCode;
+    }
+
+    public function getAdditional(): string
+    {
+        return $this->additional;
     }
 
     public function getErrorInfo(): array
     {
         return [
             'error' => [
-                'code'=> $this->errorCode,
-                'message'=> $this->getMessage(),
+                'code' => $this->messageCode,
+                'message' => $this->getMessage(),
+                'additional' => $this->getAdditional(),
             ],
         ];
+    }
+
+    //---------------------------------------
+    // Private Method
+    //---------------------------------------
+    private function resolveMessage(string $messageCode): string
+    {
+        $message = __("messages.{$messageCode}");
+
+        if ($message === "messages.{$messageCode}") {
+            return $messageCode;
+        }
+
+        return $message;
     }
 }

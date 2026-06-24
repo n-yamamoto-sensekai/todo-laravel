@@ -11,10 +11,7 @@ class TaskUpdateService
     public function execute(Task $task, Request $request): Task
     {
         if ($task->is_done) {
-            throw new TodoException(
-                'TASK_ALREADY_COMPLETED',
-                '完了済みタスクは編集できません。'
-            );
+            throw new TodoException('TE00001');
         }
 
         $task->update([

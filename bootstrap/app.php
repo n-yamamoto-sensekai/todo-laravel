@@ -22,10 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
         );
 
         $exceptions->render(function (TodoException $e, Request $request) {
-            
             // ログ
             Log::warning('TODO業務例外が発生しました', [
-                'code' => $e->getErrorCode(),
+                'message_code' => $e->getMessageCode(),
                 'message' => $e->getMessage(),
                 'url' => $request->fullUrl(),
                 'method' => $request->method(),
@@ -36,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json($e->getErrorInfo(), 422);
             }
 
-            // 通常リクエストなら前の画面に戻ってエラーを表示できるようにする）
+            // 通常リクエストなら前の画面に戻ってエラーを表示できるようにする
             return redirect()
                 ->back()
                 ->withInput()
