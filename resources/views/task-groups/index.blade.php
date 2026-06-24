@@ -3,11 +3,7 @@
 @section('content')
     <h1 class="text-2xl font-bold mb-6">タスクグループ一覧</h1>
 
-    @if ($errors->has('todo'))
-        <div class="mb-2 text-red-600">
-            {{ $errors->first('todo') }}
-        </div>
-    @endif
+    <x-page-error name="todo" />
 
     <div class="mb-6">
         <a
