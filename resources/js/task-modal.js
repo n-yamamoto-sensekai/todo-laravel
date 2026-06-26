@@ -125,8 +125,10 @@ function updateTaskItem(task) {
 
     if (task.task_group_name) {
         $taskGroupName.text('グループ：' + task.task_group_name);
+        $taskGroupName.addClass('mr-3');
     } else {
         $taskGroupName.text('');
+        $taskGroupName.removeClass('mr-3');
     }
 
     // jQuery内のキャッシュを更新
