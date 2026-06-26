@@ -10,7 +10,7 @@
                 <button
                     type="button"
                     id="js-close-task-modal"
-                    class="text-gray-500 hover:text-gray-700"
+                    class="text-gray-500 hover:text-gray-700 cursor-pointer"
                 >
                     ×
                 </button>
@@ -84,7 +84,7 @@
                     <button
                         type="button"
                         id="js-cancel-task-modal"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 cursor-pointer"
                     >
                         閉じる
                     </button>
@@ -92,7 +92,7 @@
                     <button
                         type="button"
                         id="js-delete-task-from-modal"
-                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer"
                     >
                         削除
                     </button>

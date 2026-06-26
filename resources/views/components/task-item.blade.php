@@ -32,7 +32,7 @@
         <button
             type="button"
             id="task-title-{{ $task->id }}"
-            class="block js-open-task-modal text-left {{ $task->is_done ? 'line-through text-gray-400' : '' }}"
+            class="block js-open-task-modal text-left cursor-pointer {{ $task->is_done ? 'line-through text-gray-400' : '' }}"
             data-id="{{ $task->id }}"
             data-title="{{ $task->title }}"
             data-due-date="{{ $task->due_date?->format('Y-m-d') }}"
@@ -95,7 +95,7 @@
             <button
                 type="submit"
                 id="task-toggle-button-{{ $task->id }}"
-                class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
             >
                 {{ $task->is_done ? '未完了に戻す' : '完了' }}
             </button>
