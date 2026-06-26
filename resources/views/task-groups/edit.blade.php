@@ -1,18 +1,13 @@
 @extends('layouts.app')
 @section('title', 'タスクグループ編集')
 @section('content')
-    <div class="mb-6">
-        <a
-            href="{{ route('task-groups.index') }}"
-            class="text-blue-600 hover:underline"
-        >
-            タスクグループ一覧へ戻る
-        </a>
-    </div>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-blue-600">タスクグループ編集</h1>
 
-    <h1 class="text-2xl font-bold mb-6">
-        タスクグループ編集
-    </h1>
+        <x-normal-link href="{{ route('task-groups.index') }}">
+            グループ一覧へ戻る →
+        </x-normal-link>
+    </div>
 
     <form
         action="{{ route('task-groups.update', $taskGroup) }}"
@@ -21,20 +16,22 @@
     >
         @csrf
         @method('PUT')
-        <div>
-            <label class="block mb-1 font-semibold">
-                グループ名
-            </label>
+        <label class="block mb-1">
+            グループ名
+        </label>
+        <div class="flex justify-between gap-2">
             <input
                 type="text"
                 name="name"
                 value="{{ old('name', $taskGroup->name) }}"
-                class="border rounded px-3 py-2 w-full"
+                class="border rounded px-3 py-2 flex-1"
             />
-            <x-input-error name="name" />
+            <x-primary-button>
+                更新
+            </x-primary-button>
         </div>
-        <x-primary-button>
-            更新
-        </x-primary-button>
+        
+        <x-input-error name="name" />
+
     </form>
 @endsection
