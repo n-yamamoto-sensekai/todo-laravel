@@ -52,22 +52,26 @@
     <form
         action="{{ route('tasks.store') }}"
         method="POST"
-        class="mt-6 flex gap-2"
+        class="sticky bottom-0 mt-4 py-4 bg-white"
     >
         @csrf
-        <input
-            type="hidden"
-            name="task_group_id"
-            value="{{ $taskGroup->id }}"  {{-- 所属するグループを一緒に送る --}}
-        >
-        <x-text-input name="title" :value="old('title')" />
 
-        <x-primary-button>
-            + 追加
-        </x-primary-button>
+        <div class="flex gap-2">
+            <input
+                type="hidden"
+                name="task_group_id"
+                value="{{ $taskGroup->id }}"  {{-- 所属するグループを一緒に送る --}}
+            >
+            <x-text-input name="title" :value="old('title')" />
+
+            <x-primary-button>
+                + 追加
+            </x-primary-button>
+        </div>
+
+        <x-input-error name="title" />
 
     </form>
-    <x-input-error name="title" />
 
     <x-task-modal :task-groups="$taskGroups" />
 @endsection

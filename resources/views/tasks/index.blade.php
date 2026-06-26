@@ -84,18 +84,18 @@
         method="POST"
         class="sticky bottom-0 mt-4 py-4 bg-white"
     >
-    @csrf
+        @csrf
 
-    <div class="flex gap-2">
-        {{-- `:value` と:をつけることでこの属性の中身はただの文字列ではなく、PHPとして実行するという意味になる` --}}
-        <x-text-input name="title" :value="old('title')" />
+        <div class="flex gap-2">
+            {{-- `:value` と:をつけることでこの属性の中身はただの文字列ではなく、PHPとして実行するという意味になる` --}}
+            <x-text-input name="title" :value="old('title')" />
 
-        <x-primary-button>
-            + 追加
-        </x-primary-button>
-    </div>
+            <x-primary-button>
+                + 追加
+            </x-primary-button>
+        </div>
 
-    <x-input-error name="title" />
+        <x-input-error name="title" />
 
     </form>
 
