@@ -98,6 +98,7 @@ class TaskController extends Controller
                 'task' => [
                     'id' => $task->id,
                     'is_done' => $task->is_done,
+                    'due_date' => $task->due_date?->format('Y-m-d'),
                 ],
             ]);
         }
