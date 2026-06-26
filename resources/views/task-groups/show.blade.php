@@ -1,18 +1,13 @@
 @extends('layouts.app')
 @section('title', '$taskGroup->name')
 @section('content')
-    <div class="mb-6">
-        <a
-            href="{{ route('task-groups.index') }}"
-            class="text-blue-600"
-        >
-            タスクグループ一覧へ戻る
-        </a>
-    </div>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-blue-600">{{ $taskGroup->name }}</h1>
 
-    <h1 class="text-2xl font-bold mb-6">
-        {{ $taskGroup->name }} のタスク
-    </h1>
+        <x-normal-link href="{{ route('task-groups.index') }}">
+            グループ一覧へ戻る →
+        </x-normal-link>
+    </div>
 
     {{-- フラッシュメッセージ --}}
     <x-flash-message />

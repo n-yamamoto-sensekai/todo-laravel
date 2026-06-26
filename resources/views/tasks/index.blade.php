@@ -3,15 +3,12 @@
 @section('title', 'Todo')
 
 @section('content')
-    <h1 class="text-3xl font-bold text-blue-600 mb-6">タスクリスト</h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-blue-600">タスクリスト</h1>
 
-    <div class="mb-6">
-        <a
-            href="{{ route('task-groups.index') }}"
-            class="block"
-        >
-            グループ一覧へ
-        </a>
+        <x-normal-link href="{{ route('task-groups.index') }}">
+            グループ一覧へ →
+        </x-normal-link>
     </div>
 
     {{-- フラッシュメッセージ --}}

@@ -1,19 +1,15 @@
 @extends('layouts.app')
 @section('title', 'タスクグループ一覧')
 @section('content')
-    <h1 class="text-2xl font-bold mb-6">タスクグループ一覧</h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-blue-600">タスクグループ一覧</h1>
 
-    <x-page-error name="todo" />
-
-    <div class="mb-6">
-        <a
-            href="{{ route('tasks.index') }}"
-            class="block"
-        >
-            全タスク一覧へ
-        </a>
+        <x-normal-link href="{{ route('tasks.index') }}">
+            全タスク一覧へ →
+        </x-normal-link>
     </div>
 
+    <x-page-error name="todo" />
     <x-flash-message />
 
     {{-- 新規グループフォーム --}}
