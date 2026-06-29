@@ -129,4 +129,24 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | SQL Log
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, DatabaseQueryServiceProvider writes executed SQL statements
+    | and execution time to the default log channel.
+    |
+    */
+
+    'sql' => [
+        'enable' => env('LOG_SQL_ENABLE', false),
+    ],
+
+    'queue' => [
+        'sql' => [
+            'enable' => env('LOG_QUEUE_SQL_ENABLE', false),
+        ],
+    ],
+
 ];
