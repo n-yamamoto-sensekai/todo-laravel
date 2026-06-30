@@ -8,17 +8,20 @@ use App\Models\TaskGroup;
 
 class TaskGroupController extends Controller
 {
+    private TaskGroupIndexRetrieveService $indexRetrieveService;
     private TaskGroupShowService $showService;
     private TaskGroupRegisterService $registerService;
     private TaskGroupUpdateService $updateService;
     private TaskGroupDestroyService $destroyService;
 
     public function __construct(
+        TaskGroupIndexRetrieveService $indexRetrieveService,
         TaskGroupShowService $showService,
         TaskGroupRegisterService $registerService,
         TaskGroupUpdateService $updateService,
         TaskGroupDestroyService $destroyService,
     ){
+        $this->indexRetrieveService = $indexRetrieveService;
         $this->showService = $showService;
         $this->registerService = $registerService;
         $this->updateService = $updateService;
@@ -27,10 +30,7 @@ class TaskGroupController extends Controller
 
     public function index()
     {
-        $taskGroups = TaskGroup::withCount('tasks')
-            ->latest()
-            ->get();
-
+        $taskGroups = $this->indexRetrieveService->execute();
         return view('task-groups.index', compact('taskGroups'));
     }
 
