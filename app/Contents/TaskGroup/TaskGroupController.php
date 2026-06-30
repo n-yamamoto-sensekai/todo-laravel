@@ -32,7 +32,10 @@ class TaskGroupController extends Controller
 
     public function index()
     {
-        $taskGroups = TaskGroup::latest()->get();
+        $taskGroups = TaskGroup::withCount('tasks')
+            ->latest()
+            ->get();
+
         return view('task-groups.index', compact('taskGroups'));
     }
 
