@@ -4,26 +4,24 @@ namespace App\Contents\TaskGroup;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Contents\TaskGroup\TaskGroupRequest;
 use App\Models\TaskGroup;
-use App\Contents\TaskGroup\TaskGroupShowService;
-use App\Contents\TaskGroup\TaskGroupRegisterService;
-use App\Contents\TaskGroup\TaskGroupUpdateService;
-use App\Contents\TaskGroup\TaskGroupDestroyService;
 
 class TaskGroupController extends Controller
 {
+    private TaskGroupIndexRetrieveService $indexRetrieveService;
     private TaskGroupShowService $showService;
     private TaskGroupRegisterService $registerService;
     private TaskGroupUpdateService $updateService;
     private TaskGroupDestroyService $destroyService;
 
     public function __construct(
+        TaskGroupIndexRetrieveService $indexRetrieveService,
         TaskGroupShowService $showService,
         TaskGroupRegisterService $registerService,
         TaskGroupUpdateService $updateService,
         TaskGroupDestroyService $destroyService,
     ){
+        $this->indexRetrieveService = $indexRetrieveService;
         $this->showService = $showService;
         $this->registerService = $registerService;
         $this->updateService = $updateService;
@@ -32,7 +30,7 @@ class TaskGroupController extends Controller
 
     public function index()
     {
-        $taskGroups = TaskGroup::latest()->get();
+        $taskGroups = $this->indexRetrieveService->execute();
         return view('task-groups.index', compact('taskGroups'));
     }
 

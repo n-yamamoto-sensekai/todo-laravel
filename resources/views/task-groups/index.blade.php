@@ -40,8 +40,7 @@
                         {{ $taskGroup->name }}
                     </div>
                     <div class="text-sm text-gray-500">
-                        {{-- task_count があればそれを使う。なければ tasks の Collection を数える。 --}}
-                        タスク数：{{ $taskGroup->task_count ?? $taskGroup->tasks->count() }}
+                        タスク数：{{ $taskGroup->tasks_count }}
                     </div>
                 </a>
                 <div class="mt-3 flex justify-end items-center gap-2">
