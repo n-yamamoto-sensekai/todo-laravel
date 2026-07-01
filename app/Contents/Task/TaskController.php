@@ -97,6 +97,7 @@ class TaskController extends Controller
                 'message' => 'タスクの状態を更新しました',
                 'task' => [
                     'id' => $task->id,
+                    'task_group_id' => $task->task_group_id,
                     'is_done' => $task->is_done,
                     'due_date' => $task->due_date?->format('Y-m-d'),
                 ],
