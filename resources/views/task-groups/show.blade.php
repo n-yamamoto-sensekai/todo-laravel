@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '$taskGroup->name')
+@section('title', $taskGroup->name)
 @section('content')
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-blue-600">{{ $taskGroup->name }}</h1>
